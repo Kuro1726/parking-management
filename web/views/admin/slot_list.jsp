@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Slots</title>
     <link rel="stylesheet" href="static/css/style.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
     <div class="admin-layout">
@@ -15,8 +16,8 @@
       <main class="admin-main">
         <div class="container main-content full-width">
           <div class="page-header">
-            <h2>Slot Management</h2>
-            <button class="btn btn-success">+ Add New Slot</button>
+            <h2><i class="fa-solid fa-car-side"></i> Slot Management</h2>
+            <button class="btn btn-success"><i class="fa-solid fa-plus"></i> Add New Slot</button>
           </div>
 
           <div class="filter-section d-flex align-items-center gap-10">
@@ -47,7 +48,7 @@
                   <span class="status-occupied">Occupied</span>
                 </td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 </td>
               </tr>
               <tr>
@@ -57,8 +58,8 @@
                   <span class="status-available">Available</span>
                 </td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
-                  <button class="btn btn-danger btn-sm">Delete</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                  <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
                 </td>
               </tr>
               <tr>
@@ -68,8 +69,8 @@
                   <span class="status-available">Available</span>
                 </td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
-                  <button class="btn btn-danger btn-sm">Delete</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                  <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -82,3 +83,6 @@
     <script src="static/js/admin_edit.js"></script>
   </body>
 </html>
+
+
+

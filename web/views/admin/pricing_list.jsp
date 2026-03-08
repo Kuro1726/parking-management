@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pricing Configuration</title>
     <link rel="stylesheet" href="static/css/style.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
     <div class="admin-layout">
@@ -15,8 +16,8 @@
       <main class="admin-main">
         <div class="container main-content full-width">
           <div class="page-header">
-            <h2>Pricing Configuration</h2>
-            <button class="btn btn-success">+ Add New Pricing Rule</button>
+            <h2><i class="fa-solid fa-money-bill"></i> Pricing Configuration</h2>
+            <button class="btn btn-success"><i class="fa-solid fa-plus"></i> Add New Pricing Rule</button>
           </div>
 
           <table class="data-table">
@@ -36,7 +37,7 @@
                 <td>$5.00</td>
                 <td>$1.00</td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 </td>
               </tr>
               <tr>
@@ -45,7 +46,7 @@
                 <td>$10.00</td>
                 <td>$2.00</td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 </td>
               </tr>
               <tr>
@@ -54,7 +55,7 @@
                 <td>$20.00</td>
                 <td>$5.00</td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 </td>
               </tr>
               <tr>
@@ -63,7 +64,7 @@
                 <td>$30.00</td>
                 <td>$10.00</td>
                 <td>
-                  <button class="btn btn-sm">Edit</button>
+                  <button class="btn btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                 </td>
               </tr>
             </tbody>
@@ -76,3 +77,6 @@
     <script src="static/js/admin_edit.js"></script>
   </body>
 </html>
+
+
+

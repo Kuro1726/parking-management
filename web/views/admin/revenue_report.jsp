@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Revenue Report</title>
     <link rel="stylesheet" href="static/css/style.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
     <div class="admin-layout">
@@ -14,7 +15,7 @@
       <!-- Main Content Area -->
       <main class="admin-main">
         <div class="container main-content full-width">
-          <h2>Revenue Report</h2>
+          <h2><i class="fa-solid fa-chart-line"></i> Revenue Report</h2>
 
           <div class="filter-container">
             <form class="filter-form">
@@ -102,3 +103,5 @@
     <script src="static/js/admin_edit.js"></script>
   </body>
 </html>
+
+
