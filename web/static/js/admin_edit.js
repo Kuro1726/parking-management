@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Append Actions column including Save and Delete
       const actionTd = document.createElement("td");
       actionTd.innerHTML = `
-        <button class="btn btn-sm btn-success">Save</button>
-        <button class="btn btn-danger btn-sm">Delete</button>
+        <button class="btn btn-sm btn-success"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+        <button class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</button>
       `;
       newTr.appendChild(actionTd);
 
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const tr = btn.closest("tr");
     if (!tr) return;
 
-    if (btn.textContent.trim() === "Edit") {
+    if (btn.textContent.includes("Edit")) {
       const tds = tr.querySelectorAll("td");
       const table = tr.closest("table");
       const ths = table ? table.querySelectorAll("th") : [];
@@ -108,9 +108,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Change button to Save
-      btn.textContent = "Save";
+      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
       btn.classList.add("btn-success");
-    } else if (btn.textContent.trim() === "Save") {
+    } else if (btn.textContent.includes("Save")) {
       const tds = tr.querySelectorAll("td");
 
       for (let i = 0; i < tds.length - 1; i++) {
@@ -137,9 +137,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Change button back to Edit
-      btn.textContent = "Edit";
+      btn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit';
       btn.classList.remove("btn-success");
-    } else if (btn.textContent.trim() === "Delete") {
+    } else if (btn.textContent.includes("Delete")) {
       if (confirm("Are you sure you want to delete this record?")) {
         tr.remove();
       }
