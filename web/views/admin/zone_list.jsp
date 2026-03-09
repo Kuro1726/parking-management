@@ -269,35 +269,7 @@
         </div>
       </div>
 
-      <script>
-        function openDetailModal(name, cap, vtypes, desc) {
-          document.getElementById('detailZoneName').textContent = name;
-          document.getElementById('detailCapacity').textContent = cap;
-          document.getElementById('detailVehicleTypes').textContent = vtypes;
-          document.getElementById('detailDescription').textContent = desc !== 'null' && desc !== '' ? desc : 'N/A';
-          document.getElementById('detailModal').style.display = 'block';
-        }
-
-        function openAddModal() {
-          document.getElementById('addModal').style.display = 'block';
-        }
-        function openEditModal(id, name, typeName, desc) {
-          document.getElementById('editZoneID').value = id;
-          document.getElementById('editZoneName').value = name;
-          document.getElementById('editVehicleTypeName').value = typeName;
-          document.getElementById('editDescription').value = desc !== 'null' && desc !== '' ? desc : '';
-          document.getElementById('editModal').style.display = 'block';
-        }
-        function closeModal(modalId) {
-          document.getElementById(modalId).style.display = 'none';
-        }
-        // Close modal if user clicks outside of it
-        window.onclick = function (event) {
-          if (event.target.className === 'modal') {
-            event.target.style.display = 'none';
-          }
-        }
-      </script>
+      <script src="static/js/admin_edit.js"></script>
     </body>
 
     </html>

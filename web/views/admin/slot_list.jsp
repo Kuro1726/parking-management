@@ -141,7 +141,7 @@
                   <th style="width: 15%;">Zone</th>
                   <th style="width: 15%;">Slot Name</th>
                   <th style="width: 20%;">Vehicle Type</th>
-                  <th style="width: 20%;">Status</th>
+                  <th style="width: 10%;">Status</th>
                   <th style="width: 30%; text-align: left;">Actions</th>
                 </tr>
               </thead>
@@ -321,40 +321,7 @@
         </div>
       </div>
 
-      <script>
-        function openAddModal() {
-          document.getElementById('addModal').style.display = 'block';
-        }
-        function openEditModal(id, name, zone, type, status) {
-          document.getElementById('editSlotID').value = id;
-          document.getElementById('editSlotName').value = name;
-          document.getElementById('editZoneID').value = zone;
-          document.getElementById('editTypeID').value = type;
-          document.getElementById('editStatus').value = status;
-          document.getElementById('editModal').style.display = 'block';
-        }
-        function openDetailModal(name, zone, status, plate, owner, phone, time) {
-          document.getElementById('detailSlotName').textContent = name;
-          document.getElementById('detailZoneName').textContent = zone;
-          document.getElementById('detailStatus').textContent = status.toLowerCase();
-
-          document.getElementById('detailLicensePlate').textContent = plate ? plate : 'N/A';
-          document.getElementById('detailOwnerName').textContent = owner ? owner : 'N/A';
-          document.getElementById('detailOwnerPhone').textContent = phone ? phone : 'N/A';
-          document.getElementById('detailEntryTime').textContent = time ? time.substring(0, 19) : 'N/A';
-
-          document.getElementById('detailModal').style.display = 'block';
-        }
-        function closeModal(modalId) {
-          document.getElementById(modalId).style.display = 'none';
-        }
-        // Close modal if user clicks outside of it
-        window.onclick = function (event) {
-          if (event.target.className === 'modal') {
-            event.target.style.display = 'none';
-          }
-        }
-      </script>
+      <script src="static/js/admin_edit.js"></script>
     </body>
 
     </html>
