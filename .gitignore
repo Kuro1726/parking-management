@@ -1,0 +1,13 @@
+# NetBeans private settings
+nbproject/private/
+
+# Build output
+build/
+dist/
+
+# Logs
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
