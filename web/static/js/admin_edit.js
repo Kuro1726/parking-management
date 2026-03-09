@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <option value="Inactive">Inactive</option>
           </select>`;
             } else if (
-                    tableText.includes("occupied") ||
-                    tableText.includes("available")
-                    ) {
+                tableText.includes("occupied") ||
+                tableText.includes("available")
+            ) {
                 statusOptions = `<select class="filter-input filter-select">
             <option value="Available">Available</option>
             <option value="Occupied">Occupied</option>
@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 td.dataset.originalHtml = td.innerHTML;
 
                 const columnName = ths[i]
-                        ? ths[i].textContent.trim().toLowerCase()
-                        : "";
+                    ? ths[i].textContent.trim().toLowerCase()
+                    : "";
 
                 if (columnName === "status") {
                     if (text === "Active" || text === "Inactive") {
@@ -125,9 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const newValue = input.value.trim();
                     // Basic attempt to preserve span wrappers if it's a known status
                     if (
-                            td.dataset.originalHtml &&
-                            td.dataset.originalHtml.includes("span")
-                            ) {
+                        td.dataset.originalHtml &&
+                        td.dataset.originalHtml.includes("span")
+                    ) {
                         if (newValue.toLowerCase() === "occupied") {
                             td.innerHTML = `<span class="status-occupied">${newValue}</span>`;
                         } else if (newValue.toLowerCase() === "available") {
@@ -151,3 +151,82 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// Common Modal Functions for Admin Pages
+function openAddModal() {
+    const addModal = document.getElementById('addModal');
+    if (addModal) addModal.style.display = 'block';
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.style.display = 'none';
+}
+
+function openEditModal(...args) {
+    if (document.getElementById('editSlotID')) {
+        // Slot editing
+        const [id, name, zone, type, status] = args;
+        document.getElementById('editSlotID').value = id;
+        document.getElementById('editSlotName').value = name;
+        document.getElementById('editZoneID').value = zone;
+        document.getElementById('editTypeID').value = type;
+        document.getElementById('editStatus').value = status;
+    } else if (document.getElementById('editZoneID') && document.getElementById('editZoneName')) {
+        // Zone editing
+        const [id, name, typeName, desc] = args;
+        document.getElementById('editZoneID').value = id;
+        document.getElementById('editZoneName').value = name;
+        document.getElementById('editVehicleTypeName').value = typeName;
+        document.getElementById('editDescription').value = desc !== 'null' && desc !== '' ? desc : '';
+    }
+
+    const editModal = document.getElementById('editModal');
+    if (editModal) editModal.style.display = 'block';
+}
+
+function openDetailModal(...args) {
+    if (document.getElementById('detailSlotName')) {
+        // Slot details
+        const [name, zone, status, plate, owner, phone, time] = args;
+        document.getElementById('detailSlotName').textContent = name;
+        document.getElementById('detailZoneName').textContent = zone;
+        document.getElementById('detailStatus').textContent = status ? status.toLowerCase() : '';
+
+        document.getElementById('detailLicensePlate').textContent = plate ? plate : 'N/A';
+        document.getElementById('detailOwnerName').textContent = owner ? owner : 'N/A';
+        document.getElementById('detailOwnerPhone').textContent = phone ? phone : 'N/A';
+        document.getElementById('detailEntryTime').textContent = time ? time.substring(0, 19) : 'N/A';
+
+        // Toggle owner info visiblity based on occupied status
+        // the original element only existed in slot_list.jsp
+        const ownerInfo = document.getElementById('detailOwnerInfo');
+        const emptyInfo = document.getElementById('detailEmptyInfo');
+        if (ownerInfo && emptyInfo) {
+            if (status && status.toLowerCase() === 'occupied') {
+                ownerInfo.style.display = 'block';
+                emptyInfo.style.display = 'none';
+            } else {
+                ownerInfo.style.display = 'none';
+                emptyInfo.style.display = 'block';
+            }
+        }
+    } else if (document.getElementById('detailCapacity')) {
+        // Zone details
+        const [name, cap, vtypes, desc] = args;
+        document.getElementById('detailZoneName').textContent = name;
+        document.getElementById('detailCapacity').textContent = cap;
+        document.getElementById('detailVehicleTypes').textContent = vtypes;
+        document.getElementById('detailDescription').textContent = desc !== 'null' && desc !== '' ? desc : 'N/A';
+    }
+
+    const detailModal = document.getElementById('detailModal');
+    if (detailModal) detailModal.style.display = 'block';
+}
+
+// Close modal if user clicks outside of it
+window.onclick = function (event) {
+    if (event.target.className === 'modal' || event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+}

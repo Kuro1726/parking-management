@@ -9,75 +9,6 @@
       <title>Manage Slots</title>
       <link rel="stylesheet" href="static/css/style.css" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-      <style>
-        .modal {
-          display: none;
-          position: fixed;
-          z-index: 1000;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-          background-color: #fff;
-          margin: 10% auto;
-          padding: 20px;
-          border-radius: 8px;
-          width: 400px;
-          max-width: 90%;
-        }
-
-        .close-btn {
-          color: #aaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-          cursor: pointer;
-        }
-
-        .close-btn:hover {
-          color: #000;
-        }
-
-        .form-group {
-          margin-bottom: 15px;
-        }
-
-        .form-group label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group select {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-
-        .alert {
-          padding: 10px;
-          margin-bottom: 15px;
-          border-radius: 4px;
-        }
-
-        .alert-success {
-          background-color: #d4edda;
-          color: #155724;
-          border: 1px solid #c3e6cb;
-        }
-
-        .alert-danger {
-          background-color: #f8d7da;
-          color: #721c24;
-          border: 1px solid #f5c6cb;
-        }
-      </style>
     </head>
 
     <body>
@@ -141,7 +72,7 @@
                   <th style="width: 15%;">Zone</th>
                   <th style="width: 15%;">Slot Name</th>
                   <th style="width: 20%;">Vehicle Type</th>
-                  <th style="width: 20%;">Status</th>
+                  <th style="width: 10%;">Status</th>
                   <th style="width: 30%; text-align: left;">Actions</th>
                 </tr>
               </thead>
@@ -321,40 +252,7 @@
         </div>
       </div>
 
-      <script>
-        function openAddModal() {
-          document.getElementById('addModal').style.display = 'block';
-        }
-        function openEditModal(id, name, zone, type, status) {
-          document.getElementById('editSlotID').value = id;
-          document.getElementById('editSlotName').value = name;
-          document.getElementById('editZoneID').value = zone;
-          document.getElementById('editTypeID').value = type;
-          document.getElementById('editStatus').value = status;
-          document.getElementById('editModal').style.display = 'block';
-        }
-        function openDetailModal(name, zone, status, plate, owner, phone, time) {
-          document.getElementById('detailSlotName').textContent = name;
-          document.getElementById('detailZoneName').textContent = zone;
-          document.getElementById('detailStatus').textContent = status.toLowerCase();
-
-          document.getElementById('detailLicensePlate').textContent = plate ? plate : 'N/A';
-          document.getElementById('detailOwnerName').textContent = owner ? owner : 'N/A';
-          document.getElementById('detailOwnerPhone').textContent = phone ? phone : 'N/A';
-          document.getElementById('detailEntryTime').textContent = time ? time.substring(0, 19) : 'N/A';
-
-          document.getElementById('detailModal').style.display = 'block';
-        }
-        function closeModal(modalId) {
-          document.getElementById(modalId).style.display = 'none';
-        }
-        // Close modal if user clicks outside of it
-        window.onclick = function (event) {
-          if (event.target.className === 'modal') {
-            event.target.style.display = 'none';
-          }
-        }
-      </script>
+      <script src="static/js/admin_edit.js"></script>
     </body>
 
     </html>
