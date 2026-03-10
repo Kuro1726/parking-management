@@ -5,6 +5,7 @@
 package controllers.admin;
 
 import dal.PricingDAO;
+import dal.VehicleTypeDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import models.Pricing;
 import models.User;
@@ -63,22 +65,15 @@ public class PricingController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        RequestDispatcher rd;
         if (user == null) {
-            rd = request.getRequestDispatcher("views/auth/login.jsp");
+            request.getRequestDispatcher("views/auth/login.jsp").forward(request, response);
             return;
         }
         if (user.getRoleID() != 1) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        PricingDAO dao = new PricingDAO();
-        ArrayList<Pricing> pricingList = dao.getPricingList();
-        
-        request.setAttribute("pricingList", pricingList);
-        rd = request.getRequestDispatcher("views/admin/pricing_list.jsp");
-
-        rd.forward(request, response);
+        loadPricing(request, response);
     }
 
     /**
@@ -92,7 +87,57 @@ public class PricingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        
+        BigDecimal hourlyRate = new BigDecimal(request.getParameter("hourlyRate"));
+        BigDecimal dailyRate = new BigDecimal(request.getParameter("dailyRate"));
+        String vehicleTypeName = request.getParameter("vehicleTypeName");
+        
+        VehicleTypeDAO vehicleDao = new VehicleTypeDAO();
+        PricingDAO pricingDao = new PricingDAO();
+
+        if ("add".equals(action)) {
+            int typeID = vehicleDao.findOrCreateType(vehicleTypeName);
+            Pricing newPricing = new Pricing(typeID, hourlyRate, dailyRate);
+            boolean result = pricingDao.addPricing(newPricing);
+
+            if (!result) {
+                request.setAttribute("message", "Pricing for this vehicle type already exists!");
+                loadPricing(request, response);
+                return;
+            }
+
+            request.setAttribute("message", "Pricing added successfully");
+            loadPricing(request, response);
+        } else if ("edit".equals(action)) {
+            int typeID = vehicleDao.findTypeIdByName(vehicleTypeName);
+            Pricing newPricing = new Pricing(typeID, hourlyRate, dailyRate);
+            pricingDao.updatePricing(newPricing);
+            request.setAttribute("message", "Updated pricing successfully");
+            request.setAttribute("vehicleTypeName", vehicleTypeName);
+            loadPricing(request, response);
+        } else if ("delete".equals(action)) {
+            int typeID = vehicleDao.findTypeIdByName(vehicleTypeName);
+            Pricing pricing = pricingDao.getPricingByTypeId(typeID);
+
+            if (pricing == null) {
+                request.setAttribute("message", "pricing doesn't exist");
+                loadPricing(request, response);
+                return;
+            }
+
+            pricingDao.deletePricing(pricing);
+            request.setAttribute("message", "delete successfully");
+            loadPricing(request, response);
+        }
+    }
+
+    private void loadPricing(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PricingDAO pricingDao = new PricingDAO();
+        ArrayList<Pricing> pricingList = pricingDao.getPricingList();
+        request.setAttribute("pricingList", pricingList);
+        request.getRequestDispatcher("views/admin/pricing_list.jsp").forward(request, response);
     }
 
     /**

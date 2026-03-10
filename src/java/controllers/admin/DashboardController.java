@@ -63,14 +63,14 @@ public class DashboardController extends HttpServlet {
         RequestDispatcher rd;
         if (user == null) {
             rd = request.getRequestDispatcher("views/auth/login.jsp");
-        } else {
-            if (user.getRoleID() != 1) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            } else {
-                rd = request.getRequestDispatcher("views/admin/dashboard.jsp");
-            }
+            rd.forward(request, response);
+            return;
         }
+        if (user.getRoleID() != 1) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        rd = request.getRequestDispatcher("views/admin/dashboard.jsp");
         rd.forward(request, response);
     }
 

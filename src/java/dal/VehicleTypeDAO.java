@@ -38,25 +38,29 @@ public class VehicleTypeDAO extends DBContext {
         return types;
     }
 
-    public int findOrCreateType(String typeName) {
+    public int findTypeIdByName(String typeName) {
         String querySql = "SELECT TypeID FROM VehicleTypes WHERE UPPER(TypeName) = UPPER(?)";
         try {
             stm = connection.prepareStatement(querySql);
             stm.setString(1, typeName.trim());
             rs = stm.executeQuery();
+
             if (rs.next()) {
                 return rs.getInt("TypeID");
             }
         } catch (SQLException e) {
             System.out.println("Error finding VehicleType: " + e.getMessage());
         }
+        return -1;
+    }
 
-        // If not found, insert a new one
+    public int createVehicleType(String typeName) {
         String insertSql = "INSERT INTO VehicleTypes (TypeName) VALUES (?)";
         try {
             stm = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
             stm.setString(1, typeName.trim());
             stm.executeUpdate();
+
             rs = stm.getGeneratedKeys();
             if (rs.next()) {
                 return rs.getInt(1);
@@ -64,6 +68,16 @@ public class VehicleTypeDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error creating VehicleType: " + e.getMessage());
         }
-        return -1; // Indicate failure
+        return -1;
+    }
+
+    public int findOrCreateType(String typeName) {
+        int typeId = findTypeIdByName(typeName);
+
+        if (typeId != -1) {
+            return typeId;
+        }
+
+        return createVehicleType(typeName);
     }
 }
