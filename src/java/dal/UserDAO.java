@@ -139,7 +139,6 @@ public class UserDAO extends DBContext {
             stm.setString(4, user.getPhone());
             stm.setInt(5, user.getRoleID()); // Lấy RoleID động
             stm.setString(6, user.getStatus()); // Lấy Status động
-
             return stm.executeUpdate() > 0;
 
         } catch (Exception e) {
