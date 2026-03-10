@@ -33,6 +33,14 @@
                     </div>
 
                     <table class="data-table">
+                        <c:if test="${not empty sessionScope.successMsg}">
+                            <div class="alert alert-success">${sessionScope.successMsg}</div>
+                            <c:remove var="successMsg" scope="session" />
+                        </c:if>
+                        <c:if test="${not empty sessionScope.errorMsg}">
+                            <div class="alert alert-danger">${sessionScope.errorMsg}</div>
+                            <c:remove var="errorMsg" scope="session" />
+                        </c:if>
                         <thead>
                             <tr>
                                 <th>ID</th>

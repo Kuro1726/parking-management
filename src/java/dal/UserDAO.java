@@ -130,13 +130,15 @@ public class UserDAO extends DBContext {
     public boolean insertUser(User user) {
         try {
             String strSQL = """
-                            insert into Users (Username, Password, FullName, Phone, RoleID) VALUES (?, ?, ?, ?, 3)
+                            insert into Users (Username, Password, FullName, Phone, RoleID, Status) VALUES (?, ?, ?, ?, ?, ?)
                             """;
             stm = connection.prepareStatement(strSQL);
             stm.setString(1, user.getUsername());
             stm.setString(2, user.getPassword());
             stm.setString(3, user.getFullName());
             stm.setString(4, user.getPhone());
+            stm.setInt(5, user.getRoleID()); // Lấy RoleID động
+            stm.setString(6, user.getStatus()); // Lấy Status động
 
             return stm.executeUpdate() > 0;
 

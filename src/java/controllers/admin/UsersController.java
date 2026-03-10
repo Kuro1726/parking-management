@@ -4,6 +4,7 @@
  */
 package controllers.admin;
 
+import dal.RoleDAO;
 import dal.UserDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import models.Role;
 import models.User;
 
 /**
@@ -63,7 +65,7 @@ public class UsersController extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         RequestDispatcher rd;
-        
+
         // 1. Kiểm tra đăng nhập và quyền
         if (user == null) {
             rd = request.getRequestDispatcher("views/auth/login.jsp");
@@ -86,11 +88,15 @@ public class UsersController extends HttpServlet {
             // Nếu không nhập gì thì lấy toàn bộ
             users = uDAO.getListUsers();
         }
+        
+        RoleDAO rDAO = new RoleDAO();
+        List<Role> roles = rDAO.getAllRoles();
 
         // 3. Đẩy dữ liệu sang JSP
         request.setAttribute("users", users);
+        request.setAttribute("roles", roles);
         request.setAttribute("searchKeyword", searchKeyword); // Gửi lại từ khóa để giữ chữ trên ô input
-        
+
         rd = request.getRequestDispatcher("views/admin/user_list.jsp");
         rd.forward(request, response);
     }
@@ -121,22 +127,44 @@ public class UsersController extends HttpServlet {
 
         try {
             if (action.equals("add")) {
-//                int zoneID = Integer.parseInt(request.getParameter("zoneID"));
-//                String slotName = request.getParameter("slotName");
-//                int typeID = Integer.parseInt(request.getParameter("typeID"));
-//                String status = request.getParameter("status");
-//
-//                if (slotDAO.checkSlotExist(zoneID, slotName)) {
-//                    session.setAttribute("errorMsg", "Slot '" + slotName + "' already exists in this Zone.");
-//                } else {
-//                    boolean success = slotDAO.addSlot(zoneID, slotName, typeID, status);
-//                    if (success) {
-//                        session.setAttribute("successMsg", "Slot added successfully.");
-//                    } else {
-//                        session.setAttribute("errorMsg", "Failed to add slot.");
-//                    }
-//                }
-                response.sendRedirect("Slots");
+
+                // 1. Lấy dữ liệu từ form JSP gửi lên
+                String fullName = request.getParameter("fullName");
+                String userName = request.getParameter("userName"); // name trên form là userName
+                String password = request.getParameter("password");
+                String phone = request.getParameter("phone"); // Lấy phone (nếu bạn thêm vào form)
+
+                // Nếu form chưa có phone thì cho tạm chuỗi rỗng để không bị lỗi null
+                if (phone == null) {
+                    phone = "";
+                }
+                
+                int roleID = Integer.parseInt(request.getParameter("role")); 
+                String status = request.getParameter("status");
+
+                // 2. Đóng gói vào object User
+                User newUser = new User();
+                newUser.setFullName(fullName);
+                newUser.setUsername(userName);
+                newUser.setPassword(password);
+                newUser.setPhone(phone);
+                newUser.setRoleID(roleID);     // Set RoleID
+                newUser.setStatus(status);     // Set Status
+
+                // 3. Gọi hàm insertUser có sẵn
+                UserDAO uDAO = new UserDAO();
+                boolean success = uDAO.insertUser(newUser);
+                
+                
+
+                // 4. Báo kết quả
+                if (success) {
+                    session.setAttribute("successMsg", "Thêm User thành công!");
+                } else {
+                    session.setAttribute("errorMsg", "Thêm thất bại (Có thể Username đã tồn tại).");
+                }
+                response.sendRedirect("Users");
+                return;
             } else if (action.equals("edit")) {
 //                int slotID = Integer.parseInt(request.getParameter("slotID"));
 //                int zoneID = Integer.parseInt(request.getParameter("zoneID"));
