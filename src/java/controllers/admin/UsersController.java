@@ -4,6 +4,7 @@
  */
 package controllers.admin;
 
+import dal.UserDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import models.User;
 
 /**
@@ -61,16 +63,35 @@ public class UsersController extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         RequestDispatcher rd;
+        
+        // 1. Kiểm tra đăng nhập và quyền
         if (user == null) {
             rd = request.getRequestDispatcher("views/auth/login.jsp");
-        } else {
-            if (user.getRoleID() != 1) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            } else {
-                rd = request.getRequestDispatcher("views/admin/user_list.jsp");
-            }
+            rd.forward(request, response);
+            return; // Phải có return ở đây để code dừng lại, không chạy tiếp xuống dưới
+        } else if (user.getRoleID() != 1) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
+
+        // 2. Xử lý tìm kiếm
+        UserDAO uDAO = new UserDAO();
+        String searchKeyword = request.getParameter("searchKeyword"); // Lấy từ khóa từ giao diện
+        List<User> users;
+
+        // Nếu người dùng có nhập từ khóa tìm kiếm
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            users = uDAO.getListUsersBySearch(searchKeyword.trim());
+        } else {
+            // Nếu không nhập gì thì lấy toàn bộ
+            users = uDAO.getListUsers();
+        }
+
+        // 3. Đẩy dữ liệu sang JSP
+        request.setAttribute("users", users);
+        request.setAttribute("searchKeyword", searchKeyword); // Gửi lại từ khóa để giữ chữ trên ô input
+        
+        rd = request.getRequestDispatcher("views/admin/user_list.jsp");
         rd.forward(request, response);
     }
 
@@ -85,7 +106,68 @@ public class UsersController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRoleID() != 1) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        String action = request.getParameter("action");
+        if (action == null) {
+            response.sendRedirect("Users");
+            return;
+        }
+
+        try {
+            if (action.equals("add")) {
+//                int zoneID = Integer.parseInt(request.getParameter("zoneID"));
+//                String slotName = request.getParameter("slotName");
+//                int typeID = Integer.parseInt(request.getParameter("typeID"));
+//                String status = request.getParameter("status");
+//
+//                if (slotDAO.checkSlotExist(zoneID, slotName)) {
+//                    session.setAttribute("errorMsg", "Slot '" + slotName + "' already exists in this Zone.");
+//                } else {
+//                    boolean success = slotDAO.addSlot(zoneID, slotName, typeID, status);
+//                    if (success) {
+//                        session.setAttribute("successMsg", "Slot added successfully.");
+//                    } else {
+//                        session.setAttribute("errorMsg", "Failed to add slot.");
+//                    }
+//                }
+                response.sendRedirect("Slots");
+            } else if (action.equals("edit")) {
+//                int slotID = Integer.parseInt(request.getParameter("slotID"));
+//                int zoneID = Integer.parseInt(request.getParameter("zoneID"));
+//                String slotName = request.getParameter("slotName");
+//                int typeID = Integer.parseInt(request.getParameter("typeID"));
+//                String status = request.getParameter("status");
+//
+//                if (slotDAO.checkSlotExistForUpdate(zoneID, slotName, slotID)) {
+//                    session.setAttribute("errorMsg", "Slot '" + slotName + "' already exists in this Zone.");
+//                } else {
+//                    boolean success = slotDAO.updateSlot(slotID, zoneID, slotName, typeID, status);
+//                    if (success) {
+//                        session.setAttribute("successMsg", "Slot updated successfully.");
+//                    } else {
+//                        session.setAttribute("errorMsg", "Failed to update slot.");
+//                    }
+//                }
+            } else if (action.equals("delete")) {
+//                int slotID = Integer.parseInt(request.getParameter("slotID"));
+//                boolean success = slotDAO.deleteSlot(slotID);
+//                if (success) {
+//                    session.setAttribute("successMsg", "Slot deleted successfully.");
+//                } else {
+//                    session.setAttribute("errorMsg", "Failed to delete slot, it might be in use.");
+//                }
+            }
+        } catch (Exception e) {
+            session.setAttribute("errorMsg", "Invalid input Data.");
+        }
+
+        response.sendRedirect("Users");
     }
 
     /**
