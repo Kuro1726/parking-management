@@ -110,6 +110,9 @@ public class LoginController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
+        } else {
+            request.setAttribute("message", "Username doesn't exist or wrong password");
+            request.getRequestDispatcher("views/auth/login.jsp").forward(request, response);
         }
     }
 

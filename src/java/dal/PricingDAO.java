@@ -25,7 +25,7 @@ public class PricingDAO extends DBContext {
 
     public ArrayList<Pricing> getPricingList() {
         ArrayList<Pricing> pricingList = new ArrayList<>();
-
+        
         try {
             String strSQL = """
                             select p.PricingID, p.TypeID, p.HourlyRate, p.DailyRate, vt.TypeName from Pricing p, VehicleTypes vt where p.TypeID = vt.TypeID;

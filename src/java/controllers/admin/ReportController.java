@@ -4,6 +4,8 @@
  */
 package controllers.admin;
 
+import dal.ReportDAO;
+import dal.VehicleTypeDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,7 +14,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import models.Report;
 import models.User;
+import models.VehicleType;
 
 /**
  *
@@ -68,6 +75,26 @@ public class ReportController extends HttpServlet {
             return;
         }
 
+        LocalDate now = LocalDate.now();
+
+        LocalDate startOfMonth = now.withDayOfMonth(1);
+        LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+        String startDate = startOfMonth.toString();
+        String endDate = endOfMonth.toString();
+
+        VehicleTypeDAO vehicleDao = new VehicleTypeDAO();
+        ReportDAO reportDao = new ReportDAO();
+
+        List<VehicleType> vehicleList = vehicleDao.getAllTypes();
+        ArrayList<Report> reportList = reportDao.getDailyReport(vehicleList, startDate, endDate);
+        Report totalAmountAndTickets = reportDao.getTotalAmountAndTickets(startDate, endDate);
+
+        request.setAttribute("totalAmount", totalAmountAndTickets.getTotalAmount());
+        request.setAttribute("totalTickets", totalAmountAndTickets.getTotalTickets());
+        request.setAttribute("period", "daily");
+        request.setAttribute("reportList", reportList);
+        request.setAttribute("vehicleList", vehicleList);
         request.getRequestDispatcher("views/admin/revenue_report.jsp").forward(request, response);
     }
 
@@ -82,7 +109,31 @@ public class ReportController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
+        String period = request.getParameter("period");
+
+        VehicleTypeDAO vehicleDao = new VehicleTypeDAO();
+        ReportDAO reportDao = new ReportDAO();
+        List<VehicleType> vehicleList = vehicleDao.getAllTypes();
+        ArrayList<Report> reportList = new ArrayList<>();
+        Report totalAmountAndTickets = reportDao.getTotalAmountAndTickets(startDate, endDate);
+
+        if ("daily".equals(period)) {
+            reportList = reportDao.getDailyReport(vehicleList, startDate, endDate);
+        } else {
+            reportList = reportDao.getMonthlyReport(vehicleList, startDate, endDate);
+        }
+
+        request.setAttribute("totalAmount", totalAmountAndTickets.getTotalAmount());
+        request.setAttribute("totalTickets", totalAmountAndTickets.getTotalTickets());
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("period", period);
+        request.setAttribute("reportList", reportList);
+        request.setAttribute("vehicleList", vehicleList);
+        request.getRequestDispatcher("views/admin/revenue_report.jsp").forward(request, response);
+
     }
 
     /**
