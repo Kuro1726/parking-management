@@ -72,12 +72,10 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Total Tickets</th>
-                                    <c:if test="${vehicleList != null || !vehicleList.isEmpty()}">
-                                        <c:forEach var="v" items="${vehicleList}">
-                                        <th>${v.typeName}</th>
-                                        </c:forEach>
-                                    </c:if>
+                                <th>Top Parked Vehicle</th>
+                                <th>Top Vehicle Revenue</th>
                                 <th>Total Revenue</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -86,10 +84,22 @@
                                     <tr>
                                         <td>${period == "daily" ? r.date : r.month}</td>
                                         <td>${r.totalTickets}</td>
-                                        <c:forEach var="rev" items="${r.vehicleRevenueList}">
-                                            <td>${FormatCurrency.formatVND(rev)}</td>
-                                        </c:forEach>
+                                        <td>${r.topVehicle}</td>
+                                        <td>${FormatCurrency.formatVND(r.topRevenue)}</td>
                                         <td><strong>${FormatCurrency.formatVND(r.totalAmount)}</strong></td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm"
+                                                    data-revenue='${r.vehicleRevenueList}'
+                                                    data-types='${r.vehicleTypeList}'
+                                                    data-tickets='${r.totalTicketsByVehicleType}'
+                                                    onclick="openDetailModal(this)">
+                                                <i class="fa-solid fa-circle-info"></i> View Details
+                                            </button>
+
+                                            <input type="hidden" class="revenue" value="${r.vehicleRevenueList}">
+                                            <input type="hidden" class="types" value="${r.vehicleTypeList}">
+                                            <input type="hidden" class="tickets" value="${r.totalTicketsByVehicleType}">
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
@@ -99,6 +109,36 @@
 
                 <jsp:include page="../includes/footer.jsp"/>
             </main>
+        </div>
+
+        <!-- Detail Zone Modal -->
+        <div id="detailModal" class="modal">
+            <div class="modal-content" style="width: 1000px;">
+                <span class="close-btn" onclick="closeModal('detailModal')">&times;</span>
+                <h3 style="margin-top: 0; color: #333; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">Report Details
+                </h3>
+                <div
+                    style="background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #4CAF50; margin-top: 15px;">
+                    <!--                    <p style="margin: 8px 0;"><strong>Zone Name:</strong> <span id="detailZoneName"></span></p>
+                                        <p style="margin: 8px 0;"><strong>Vehicle Types:</strong> <span id="detailVehicleTypes"></span></p>
+                                        <p style="margin: 8px 0;"><strong>Capacity:</strong> <span id="detailCapacity"></span> slots</p>
+                                        <p style="margin: 8px 0;"><strong>Description:</strong> <span id="detailDescription"></span></p>-->
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Type</th>
+                                <th>Total Tickets</th>
+                                <th>Total Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportDetails">
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('detailModal')">Close</button>
+                </div>
+            </div>
         </div>
         <script src="static/js/admin_edit.js"></script>
     </body>

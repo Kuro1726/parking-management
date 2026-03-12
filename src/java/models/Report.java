@@ -18,11 +18,17 @@ public class Report {
     private Date date;
     private int totalTickets;
     private ArrayList<BigDecimal> vehicleRevenueList;
+    private ArrayList<String> vehicleTypeList;
+    private ArrayList<Integer> totalTicketsByVehicleType;
     private BigDecimal totalAmount;
     private String month;
+    private String topVehicle;
+    private BigDecimal topRevenue;
 
     public Report() {
         vehicleRevenueList = new ArrayList<>();
+        vehicleTypeList = new ArrayList<>();
+        totalTicketsByVehicleType = new ArrayList<>();
     }
 
     public Report(Date date, int totalTickets, ArrayList<BigDecimal> vehicleRevenueList, BigDecimal totalAmount) {
@@ -77,6 +83,38 @@ public class Report {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getTopVehicle() {
+        return topVehicle;
+    }
+
+    public void setTopVehicle(String topVehicle) {
+        this.topVehicle = topVehicle;
+    }
+
+    public BigDecimal getTopRevenue() {
+        return topRevenue;
+    }
+
+    public void setTopRevenue(BigDecimal topRevenue) {
+        this.topRevenue = topRevenue;
+    }
+
+    public ArrayList<String> getVehicleTypeList() {
+        return vehicleTypeList;
+    }
+
+    public void setVehicleTypeList(ArrayList<String> vehicleTypeList) {
+        this.vehicleTypeList = vehicleTypeList;
+    }
+
+    public ArrayList<Integer> getTotalTicketsByVehicleType() {
+        return totalTicketsByVehicleType;
+    }
+
+    public void setTotalTicketsByVehicleType(ArrayList<Integer> totalTicketsByVehicleType) {
+        this.totalTicketsByVehicleType = totalTicketsByVehicleType;
     }
 
     

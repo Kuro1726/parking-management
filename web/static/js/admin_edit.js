@@ -31,6 +31,7 @@ function openEditModal(...args) {
         const [typeName] = args;
         document.getElementById('vehicleType').value = typeName;
     } else if (document.getElementById('editUser')) {
+<<<<<<< Updated upstream
         const [id, fullName, username, password, roleID, status] = args;
         document.getElementById('editUser').value=id;
         document.getElementById('fullName').value=fullName;
@@ -38,6 +39,9 @@ function openEditModal(...args) {
         document.getElementById('password').value=password;
         document.getElementById('role').value=roleID;
         document.getElementById('status').value=status;
+=======
+
+>>>>>>> Stashed changes
     }
 
     const editModal = document.getElementById('editModal');
@@ -46,6 +50,7 @@ function openEditModal(...args) {
 }
 
 function openDetailModal(...args) {
+function openDetailModal(btn, ...args) {
     if (document.getElementById('detailSlotName')) {
         // Slot details
         const [name, zone, status, plate, owner, phone, time] = args;
@@ -78,6 +83,38 @@ function openDetailModal(...args) {
         document.getElementById('detailCapacity').textContent = cap;
         document.getElementById('detailVehicleTypes').textContent = vtypes;
         document.getElementById('detailDescription').textContent = desc !== 'null' && desc !== '' ? desc : 'N/A';
+    } else if (document.getElementById('reportDetails')) {
+        let row = btn.closest("tr");
+
+        let revenue = row.querySelector(".revenue").value
+                .slice(1, -1)
+                .split(", ")
+                .map(Number);
+
+        let types = row.querySelector(".types").value
+                .slice(1, -1)
+                .split(", ");
+
+        let tickets = row.querySelector(".tickets").value
+                .slice(1, -1)
+                .split(", ")
+                .map(Number);
+
+        let tbody = document.getElementById("reportDetails");
+
+        let html = "";
+
+        for (let i = 0; i < types.length; i++) {
+            html += `
+            <tr>
+                <td>${types[i]}</td>
+                <td>${tickets[i]}</td>
+                <td>${revenue[i].toLocaleString('vi-VN')}đ</td>
+            </tr>
+        `;
+        }
+
+        tbody.innerHTML = html;
     }
 
     const detailModal = document.getElementById('detailModal');
