@@ -133,24 +133,31 @@
                     <input type="hidden" name="user" id="editUser">
                     <div class="form-group">
                         <label>Full name</label>
-                        <input type="number" name="fullName" id="fullName" required>
+                        <input type="text" name="fullName" id="fullName" required>
                     </div>
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="number" name="hourlyRate" id="hourlyRate" required>
+                        <input type="text" name="userName" id="userName" required>
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="number" name="dailyRate" id="dailyRate" required>
+                        <input type="text" name="password" id="password" required>
                     </div>
                     <div class="form-group">
                         <label>Role</label>
-                        <input type="number" name="dailyRate" id="dailyRate" required>
+                        <select name="role">
+                            <c:forEach items="${roles}" var="r">
+                                <option value="${r.roleID}">${r.roleName}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Status</label>
-                        <input type="number" name="dailyRate" id="dailyRate" required>
+                        <select name="status" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-success" style="width: 100%;">Update User</button>
                 </form>
