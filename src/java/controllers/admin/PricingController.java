@@ -102,18 +102,18 @@ public class PricingController extends HttpServlet {
             boolean result = pricingDao.addPricing(newPricing);
 
             if (!result) {
-                request.setAttribute("message", "Pricing for this vehicle type already exists!");
+                request.setAttribute("errorMsg", "Pricing for this vehicle type already exists!");
                 loadPricing(request, response);
                 return;
             }
 
-            request.setAttribute("message", "Pricing added successfully");
+            request.setAttribute("successMsg", "Pricing added successfully");
             loadPricing(request, response);
         } else if ("edit".equals(action)) {
             int typeID = vehicleDao.findTypeIdByName(vehicleTypeName);
             Pricing newPricing = new Pricing(typeID, hourlyRate, dailyRate);
             pricingDao.updatePricing(newPricing);
-            request.setAttribute("message", "Updated pricing successfully");
+            request.setAttribute("successMsg", "Updated pricing successfully");
             request.setAttribute("vehicleTypeName", vehicleTypeName);
             loadPricing(request, response);
         } else if ("delete".equals(action)) {
@@ -121,13 +121,13 @@ public class PricingController extends HttpServlet {
             Pricing pricing = pricingDao.getPricingByTypeId(typeID);
 
             if (pricing == null) {
-                request.setAttribute("message", "pricing doesn't exist");
+                request.setAttribute("errorMsg", "Pricing doesn't exist");
                 loadPricing(request, response);
                 return;
             }
 
             pricingDao.deletePricing(pricing);
-            request.setAttribute("message", "delete successfully");
+            request.setAttribute("successMsg", "Delete successfully");
             loadPricing(request, response);
         }
     }

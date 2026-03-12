@@ -3,6 +3,7 @@
 <%@page import="java.util.ArrayList" %>
 <%@page import="models.Pricing" %>
 <%@page import="models.VehicleType" %>
+<%@page import="utils.FormatCurrency" %>
 <!doctype html>
 <html lang="en">
     <head>
@@ -25,6 +26,15 @@
                         <button class="btn btn-success" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Pricing Rule</button>
                     </div>
 
+                    <c:if test="${not empty successMsg}">
+                        <div class="alert alert-success">${successMsg}</div>
+                        <c:remove var="successMsg" scope="request" />
+                    </c:if>
+                    <c:if test="${not empty errorMsg}">
+                        <div class="alert alert-danger">${errorMsg}</div>
+                        <c:remove var="errorMsg" scope="request" />
+                    </c:if>
+
                     <table class="data-table">
                         <thead>
                             <tr>
@@ -39,8 +49,8 @@
                                 <c:forEach var="pricing" items="${requestScope.pricingList}">
                                     <tr>
                                         <td>${pricing.vehicleType.typeName}</td>
-                                        <td>$${pricing.hourlyRate}</td>
-                                        <td>$${pricing.dailyRate}</td>
+                                        <td>${FormatCurrency.formatVND(pricing.hourlyRate)}</td>
+                                        <td>${FormatCurrency.formatVND(pricing.dailyRate)}</td>
                                         <td>
                                             <button class="btn btn-sFm" onclick="openEditModal('${pricing.vehicleType.typeName}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
                                             <form action="Pricing" method="POST" style="display:inline;"
@@ -117,11 +127,6 @@
             </div>
         </div>   
         <script src="static/js/admin_edit.js"></script>
-        <c:if test="${not empty message}">
-            <script>
-                alert("${message}");
-            </script>
-        </c:if>
     </body>
 </html>
 

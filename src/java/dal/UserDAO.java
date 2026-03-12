@@ -7,6 +7,7 @@ package dal;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,15 +27,15 @@ public class UserDAO extends DBContext {
 
         try {
             String strSQL = """
-                            select * from Users s where s.Username = ?
+                            select * from Users s where UPPER(s.Username) = ?
                             """;
             stm = connection.prepareStatement(strSQL);
-            stm.setString(1, username);
+            stm.setString(1, username.toUpperCase());
             rs = stm.executeQuery();
 
             while (rs.next()) {
                 user = new User();
-                
+
                 user.setUserID(rs.getInt("UserID"));
                 user.setUsername(rs.getString("Username"));
                 user.setPassword(rs.getString("Password"));
@@ -47,7 +48,7 @@ public class UserDAO extends DBContext {
                     user.setCreatedAt(ts.toLocalDateTime());
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -64,10 +65,47 @@ public class UserDAO extends DBContext {
             stm.setString(2, user.getPassword());
             stm.setString(3, user.getFullName());
             stm.setString(4, user.getPhone());
-            
+
+            return stm.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean updateInformation(User user) {
+        try {
+            String strSQL = """
+                            update Users set Username = ?, FullName = ?, Phone = ? where UserID = ?;
+                            """;
+            stm = connection.prepareStatement(strSQL);
+            stm.setString(1, user.getUsername());
+            stm.setString(2, user.getFullName());
+            stm.setString(3, user.getPhone());
+            stm.setInt(4, user.getUserID());
             return stm.executeUpdate() > 0;
             
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    public boolean changePassword(User user) {
+        try {
+            String strSQL = """
+                            update Users set Password = ? where UserID = ?;
+                            """;
+            stm = connection.prepareStatement(strSQL);
+            stm.setString(1, user.getPassword());
+            System.out.println(user.getUserID());
+            stm.setInt(2, user.getUserID());
+            return stm.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         

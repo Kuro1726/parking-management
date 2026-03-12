@@ -4,6 +4,7 @@
  */
 package controllers.customer;
 
+import dal.UserDAO;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,9 +60,9 @@ public class ProfileController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User onSessionUser = (User) session.getAttribute("user");
         RequestDispatcher rd;
-        if (user == null) {
+        if (onSessionUser == null) {
             rd = request.getRequestDispatcher("views/auth/login.jsp");
         } else {
             rd = request.getRequestDispatcher("views/customer/profile.jsp");
@@ -80,7 +81,49 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        String action = request.getParameter("action");
+        UserDAO userDao = new UserDAO();
+
+        if ("updateProfile".equals(action)) {
+            String fullname = request.getParameter("fullname");
+            String username = request.getParameter("username");
+            String phone = request.getParameter("phone");
+
+            user.setUsername(username);
+            user.setFullName(fullname);
+            user.setPhone(phone);
+            boolean success = userDao.updateInformation(user);
+
+            if (success) {
+                session.setAttribute("user", user);
+                request.setAttribute("successMsg", "Update successfully.");
+            } else {
+                request.setAttribute("errorMsg", "Update Failed.");
+            }
+        } else if ("changePassword".equals(action)) {
+            String currentPassword = request.getParameter("current_password");
+            String newPassword = request.getParameter("new_password");
+            String confirmPassword = request.getParameter("confirm_password");
+
+            if (!currentPassword.equals(user.getPassword())) {
+                request.setAttribute("errorMsg", "Wrong current password.");
+            } else if (!confirmPassword.equals(newPassword)) {
+                request.setAttribute("errorMsg", "New password & confirm password must match.");
+            } else {
+                user.setPassword(newPassword);
+                boolean success = userDao.changePassword(user);
+                if (success) {
+                    session.setAttribute("user", user);
+                    request.setAttribute("successMsg", "Change password successfully.");
+                } else {
+                    request.setAttribute("errorMsg", "Change password failed.");
+                }
+            }
+        }
+        request.getRequestDispatcher("views/customer/profile.jsp").forward(request, response);
     }
 
     /**
