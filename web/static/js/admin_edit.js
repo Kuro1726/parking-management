@@ -31,7 +31,7 @@ function openEditModal(...args) {
         const [typeName] = args;
         document.getElementById('vehicleType').value = typeName;
     } else if (document.getElementById('editUser')) {
-<<<<<<< Updated upstream
+
         const [id, fullName, username, password, roleID, status] = args;
         document.getElementById('editUser').value=id;
         document.getElementById('fullName').value=fullName;
@@ -39,9 +39,6 @@ function openEditModal(...args) {
         document.getElementById('password').value=password;
         document.getElementById('role').value=roleID;
         document.getElementById('status').value=status;
-=======
-
->>>>>>> Stashed changes
     }
 
     const editModal = document.getElementById('editModal');
