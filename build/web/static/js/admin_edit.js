@@ -49,7 +49,6 @@ function openEditModal(...args) {
         editModal.style.display = 'block';
 }
 
-function openDetailModal(...args) {
 function openDetailModal(btn, ...args) {
     if (document.getElementById('detailSlotName')) {
         // Slot details
