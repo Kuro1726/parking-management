@@ -78,6 +78,7 @@ public class RegisterController extends HttpServlet {
         newUser.setPhone(request.getParameter("phone"));
         newUser.setUsername(request.getParameter("username"));
         newUser.setPassword(request.getParameter("password"));
+        newUser.setRoleID(3);
 
         UserDAO dao = new UserDAO();
         User user = dao.getUserByUsername(newUser.getUsername());
@@ -86,7 +87,7 @@ public class RegisterController extends HttpServlet {
             request.setAttribute("error", "Username already taken");
             request.getRequestDispatcher("views/auth/register.jsp").forward(request, response);
         } else {
-            boolean success = dao.insertUser(newUser);
+            boolean success = dao.registerUser(newUser);
 
             if (success) {
                 response.sendRedirect(request.getContextPath() + "/Login");
