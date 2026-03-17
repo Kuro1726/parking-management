@@ -45,42 +45,51 @@
             </form>
           </div>
 
+          <c:set var="hasTicket" value="${not empty ticket}" />
           <div class="invoice-section">
             <h3 class="invoice-header"><i class="fa-solid fa-file-invoice"></i> Invoice</h3>
+            <p><strong>Ticket Code:</strong> <span>${hasTicket ? ticket.ticketCode : '-'}</span></p>
+            <p><strong>License Plate:</strong> <span>${hasTicket ? ticket.licensePlate : '-'}</span></p>
+            <p><strong>Zone - Slot:</strong>
+              <span>
+                <c:choose>
+                  <c:when test="${hasTicket}">
+                    ${ticket.slot.zone.zoneName} - ${ticket.slot.slotName}
+                  </c:when>
+                  <c:otherwise>-</c:otherwise>
+                </c:choose>
+              </span>
+            </p>
+            <p><strong>Check-In Time:</strong> <span>${hasTicket ? entryTimeFormatted : '-'}</span></p>
 
-            <c:choose>
-              <c:otherwise>
-                <p><strong>Ticket Code:</strong> ${ticket.ticketCode}</p>
-                <p><strong>License Plate:</strong> ${ticket.licensePlate}</p>
-                <p><strong>Zone - Slot:</strong> ${ticket.slot.zone.zoneName} - ${ticket.slot.slotName}</p>
-                <p><strong>Check-In Time:</strong> ${entryTimeFormatted}</p>
-                <div class="form-group" style="margin: 12px 0 0;">
-                  <label style="display:flex; align-items:center; gap:10px; font-weight:600;">
-                    <input type="checkbox" id="lostTicketCheckbox" data-total-with-lost="${totalWithLost}" />
-                    Lost ticket
-                  </label>
-                </div>
-                <p id="lostFeeRow" style="display:none; margin-top: 6px;">
-                  <strong>Lost Ticket Fee:</strong> <span id="lostFeeValue">${lostFee}</span>
-                </p>
+            <div class="form-group" style="margin: 12px 0 0;">
+              <label style="display:flex; align-items:center; gap:10px; font-weight:600;">
+                <input type="checkbox"
+                       id="lostTicketCheckbox"
+                       data-total-with-lost="${totalWithLost}"
+                       ${hasTicket ? "" : "disabled"} />
+                Lost ticket
+              </label>
+            </div>
+            <p id="lostFeeRow" style="display:none; margin-top: 6px;">
+              <strong>Lost Ticket Fee:</strong> <span id="lostFeeValue">${hasTicket ? lostFee : ''}</span>
+            </p>
 
-                <div class="invoice-total-container">
-                  <h2 class="invoice-total-text">Total: <span id="totalValue">${baseAmount}</span></h2>
-                </div>
+            <div class="invoice-total-container">
+              <h2 class="invoice-total-text">Total: <span id="totalValue">${hasTicket ? baseAmount : '0 ₫'}</span></h2>
+            </div>
 
-                <div class="invoice-actions">
-                  <form id="confirmForm" action="VehicleOut" method="post" style="display:inline-block;">
-                    <input type="hidden" name="action" value="confirm" />
-                    <input type="hidden" name="ticketID" value="${ticket.ticketID}" />
-                    <input type="hidden" name="paymentMethod" value="CASH" />
-                    <input type="hidden" name="lostTicket" id="lostTicketHidden" value="false" />
-                    <button class="btn btn-success btn-flex-large" type="submit">
-                      Confirm Payment
-                    </button>
-                  </form>
-                </div>
-              </c:otherwise>
-            </c:choose>
+            <div class="invoice-actions">
+              <form id="confirmForm" action="VehicleOut" method="post" style="display:inline-block;">
+                <input type="hidden" name="action" value="confirm" />
+                <input type="hidden" name="ticketID" value="${hasTicket ? ticket.ticketID : ''}" />
+                <input type="hidden" name="paymentMethod" value="CASH" />
+                <input type="hidden" name="lostTicket" id="lostTicketHidden" value="false" />
+                <button class="btn btn-success btn-flex-large" type="submit" ${hasTicket ? "" : "disabled"}>
+                  Confirm Payment
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
