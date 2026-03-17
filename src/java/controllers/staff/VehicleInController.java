@@ -92,8 +92,8 @@ public class VehicleInController extends HttpServlet {
                 TicketDAO ticketDAO = new TicketDAO();
                 Ticket ticket = new Ticket();
 
-                // Đơn giản tạo mã vé theo timestamp
-                ticket.setTicketCode("VEX-" + System.currentTimeMillis());
+                // Tạo mã vé theo format VEX-yyMMdd-0001
+                ticket.setTicketCode(ticketDAO.generateNextTicketCode());
                 ticket.setLicensePlate(licensePlate);
                 ticket.setTypeID(typeID);
                 ticket.setSlotID(slotID);

@@ -30,6 +30,7 @@ import models.User;
 public class VehicleOutController extends HttpServlet {
 
     private static final DateTimeFormatter ENTRY_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss dd/M/yyyy");
+    private static final BigDecimal LOST_TICKET_FEE = new BigDecimal("50000");
 
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -110,7 +111,10 @@ public class VehicleOutController extends HttpServlet {
                     BigDecimal totalAmount = hourly.multiply(BigDecimal.valueOf(hours));
 
                     request.setAttribute("ticket", ticket);
-                    request.setAttribute("totalAmount", FormatCurrency.formatVND(totalAmount));
+                    request.setAttribute("baseAmount", FormatCurrency.formatVND(totalAmount));
+                    request.setAttribute("lostFee", FormatCurrency.formatVND(LOST_TICKET_FEE));
+                    request.setAttribute("totalWithLost", FormatCurrency.formatVND(totalAmount.add(LOST_TICKET_FEE)));
+                    request.setAttribute("totalAmount", FormatCurrency.formatVND(totalAmount)); // giữ tương thích chỗ khác nếu có
                     if (ticket.getEntryTime() != null) {
                         String formatted = ticket.getEntryTime().format(ENTRY_TIME_FORMATTER);
                         request.setAttribute("entryTimeFormatted", formatted);
@@ -125,6 +129,7 @@ public class VehicleOutController extends HttpServlet {
                 if (paymentMethod == null || paymentMethod.isEmpty()) {
                     paymentMethod = "CASH";
                 }
+                boolean lostTicket = "true".equalsIgnoreCase(request.getParameter("lostTicket"));
 
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
                 if (ticket == null) {
@@ -149,6 +154,10 @@ public class VehicleOutController extends HttpServlet {
                     hourly = BigDecimal.ZERO;
                 }
                 BigDecimal totalAmount = hourly.multiply(BigDecimal.valueOf(hours));
+                if (lostTicket) {
+                    totalAmount = totalAmount.add(LOST_TICKET_FEE);
+                    paymentMethod = "LOST_TICKET";
+                }
 
                 // Cập nhật trạng thái vé và tạo transaction
                 boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
@@ -175,9 +184,26 @@ public class VehicleOutController extends HttpServlet {
                     return;
                 }
 
+                // Tính tiền gửi xe hiện tại + phụ phí mất vé
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(ticket.getEntryTime(), now);
+                long minutes = duration.toMinutes();
+                long hours = minutes / 60;
+                if (minutes % 60 != 0) {
+                    hours++;
+                }
+                if (hours <= 0) {
+                    hours = 1;
+                }
+
+                BigDecimal hourly = ticket.getHourlyRate();
+                if (hourly == null) {
+                    hourly = BigDecimal.ZERO;
+                }
+                BigDecimal baseAmount = hourly.multiply(BigDecimal.valueOf(hours));
+                BigDecimal totalAmount = baseAmount.add(LOST_TICKET_FEE);
+
                 boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
-           
-                BigDecimal totalAmount = new BigDecimal("50000");
                 TransactionDAO transDAO = new TransactionDAO();
                 boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, "LOST_TICKET", user.getUserID());
 

@@ -89,7 +89,7 @@
 
       <jsp:include page="../includes/footer.jsp" />
 
-      <script src="static/js/staff_edit.js"></script>
+      <script src="static/js/staff_edit.js?v=2"></script>
     </body>
 
     </html>

@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import models.Pricing;
+import models.Slot;
 import models.StaffTicketHistory;
 import models.Ticket;
 import models.User;
+import models.Zone;
 
 /**
  *
@@ -69,9 +71,15 @@ public class TicketDAO extends DBContext {
      */
     public Ticket findActiveTicketByPlate(String licensePlate) {
         String sql = """
-                    SELECT t.*, u.FullName, u.Phone
+                    SELECT
+                      t.*,
+                      u.FullName, u.Phone,
+                      s.SlotName,
+                      z.ZoneName
                     FROM Tickets t
                     LEFT JOIN Users u ON t.CustomerID = u.UserID
+                    JOIN Slots s ON t.SlotID = s.SlotID
+                    JOIN Zones z ON s.ZoneID = z.ZoneID
                     WHERE UPPER(t.Status) = 'ACTIVE'
                       AND UPPER(t.LicensePlate) = UPPER(?)
                     """;
@@ -93,6 +101,15 @@ public class TicketDAO extends DBContext {
                 t.setHourlyRate(rs.getBigDecimal("HourlyRate"));
                 t.setDailyRate(rs.getBigDecimal("DailyRate"));
                 t.setStatus(rs.getString("Status"));
+
+                // Slot + Zone for invoice display
+                Slot slot = new Slot();
+                slot.setSlotID(t.getSlotID());
+                slot.setSlotName(rs.getString("SlotName"));
+                Zone zone = new Zone();
+                zone.setZoneName(rs.getString("ZoneName"));
+                slot.setZone(zone);
+                t.setSlot(slot);
 
                 int customerID = rs.getInt("CustomerID");
                 if (!rs.wasNull()) {
@@ -154,7 +171,16 @@ public class TicketDAO extends DBContext {
      * Lấy chi tiết vé theo ID.
      */
     public Ticket getTicketById(int ticketID) {
-        String sql = "SELECT * FROM Tickets WHERE TicketID = ?";
+        String sql = """
+                    SELECT
+                      t.*,
+                      s.SlotName,
+                      z.ZoneName
+                    FROM Tickets t
+                    JOIN Slots s ON t.SlotID = s.SlotID
+                    JOIN Zones z ON s.ZoneID = z.ZoneID
+                    WHERE t.TicketID = ?
+                    """;
         try {
             stm = connection.prepareStatement(sql);
             stm.setInt(1, ticketID);
@@ -174,6 +200,14 @@ public class TicketDAO extends DBContext {
                 t.setDailyRate(rs.getBigDecimal("DailyRate"));
                 t.setStatus(rs.getString("Status"));
                 t.setCreatedBy(rs.getInt("CreatedBy"));
+
+                Slot slot = new Slot();
+                slot.setSlotID(t.getSlotID());
+                slot.setSlotName(rs.getString("SlotName"));
+                Zone zone = new Zone();
+                zone.setZoneName(rs.getString("ZoneName"));
+                slot.setZone(zone);
+                t.setSlot(slot);
                 return t;
             }
         } catch (Exception e) {
@@ -196,6 +230,40 @@ public class TicketDAO extends DBContext {
             System.out.println("Error in updateTicketStatus: " + e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Tạo TicketCode theo format: VEX-yyMMdd-0001 (tăng dần theo ngày).
+     */
+    public String generateNextTicketCode() {
+        String sql = """
+                    SELECT MAX(TicketCode) AS MaxCode
+                    FROM Tickets
+                    WHERE TicketCode LIKE ('VEX-' + FORMAT(GETDATE(), 'yyMMdd') + '-%')
+                    """;
+        try {
+            stm = connection.prepareStatement(sql);
+            rs = stm.executeQuery();
+            int nextSeq = 1;
+            if (rs.next()) {
+                String maxCode = rs.getString("MaxCode");
+                if (maxCode != null && maxCode.length() >= 4) {
+                    String last4 = maxCode.substring(maxCode.length() - 4);
+                    try {
+                        nextSeq = Integer.parseInt(last4) + 1;
+                    } catch (NumberFormatException ignored) {
+                        nextSeq = 1;
+                    }
+                }
+            }
+            String datePart = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyMMdd"));
+            return "VEX-" + datePart + "-" + String.format("%04d", nextSeq);
+        } catch (Exception e) {
+            System.out.println("Error in generateNextTicketCode: " + e.getMessage());
+        }
+        // Fallback nếu có lỗi DB
+        String datePart = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyMMdd"));
+        return "VEX-" + datePart + "-" + String.format("%04d", (int) (System.currentTimeMillis() % 10000));
     }
 
     /**

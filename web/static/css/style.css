@@ -755,7 +755,8 @@ input[type="date"]:focus {
 }
 
 .invoice-section {
-  flex: 1;
+  flex: 0 0 300px;
+  max-width: 300px;
   background: #fdfdfd;
   padding: 20px;
   border: 2px solid #08519c;

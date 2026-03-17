@@ -34,43 +34,49 @@
             </form>
           </div>
 
-          <c:if test="${not empty ticket}">
-            <div class="invoice-section">
-              <h3 class="invoice-header"><i class="fa-solid fa-file-invoice"></i> Invoice</h3>
+          <div class="invoice-section">
+            <h3 class="invoice-header"><i class="fa-solid fa-file-invoice"></i> Invoice</h3>
 
-              <p><strong>Ticket ID:</strong> ${ticket.ticketID}</p>
-              <p><strong>Ticket Code:</strong> ${ticket.ticketCode}</p>
-              <p><strong>License Plate:</strong> ${ticket.licensePlate}</p>
-              <p><strong>Check-In Time:</strong> ${entryTimeFormatted}</p>
+            <c:choose>
+              <c:otherwise>
+                <p><strong>Ticket Code:</strong> ${ticket.ticketCode}</p>
+                <p><strong>License Plate:</strong> ${ticket.licensePlate}</p>
+                <p><strong>Zone - Slot:</strong> ${ticket.slot.zone.zoneName} - ${ticket.slot.slotName}</p>
+                <p><strong>Check-In Time:</strong> ${entryTimeFormatted}</p>
+                <div class="form-group" style="margin: 12px 0 0;">
+                  <label style="display:flex; align-items:center; gap:10px; font-weight:600;">
+                    <input type="checkbox" id="lostTicketCheckbox" data-total-with-lost="${totalWithLost}" />
+                    Lost ticket
+                  </label>
+                </div>
+                <p id="lostFeeRow" style="display:none; margin-top: 6px;">
+                  <strong>Lost Ticket Fee:</strong> <span id="lostFeeValue">${lostFee}</span>
+                </p>
 
-              <div class="invoice-total-container">
-                <h2 class="invoice-total-text">Total: ${totalAmount}</h2>
-              </div>
+                <div class="invoice-total-container">
+                  <h2 class="invoice-total-text">Total: <span id="totalValue">${baseAmount}</span></h2>
+                </div>
 
-              <div class="invoice-actions">
-                <form action="VehicleOut" method="post" style="display:inline-block;">
-                  <input type="hidden" name="action" value="confirm" />
-                  <input type="hidden" name="ticketID" value="${ticket.ticketID}" />
-                  <input type="hidden" name="paymentMethod" value="CASH" />
-                  <button class="btn btn-success btn-flex-large" type="submit">
-                    Confirm Payment
-                  </button>
-                </form>
-                <form action="VehicleOut" method="post" style="display:inline-block; margin-left:10px;">
-                  <input type="hidden" name="action" value="lost" />
-                  <input type="hidden" name="ticketID" value="${ticket.ticketID}" />
-                  <button class="btn btn-danger btn-flex-large" type="submit">
-                    Mark as Lost Ticket
-                  </button>
-                </form>
-              </div>
-            </div>
-          </c:if>
+                <div class="invoice-actions">
+                  <form id="confirmForm" action="VehicleOut" method="post" style="display:inline-block;">
+                    <input type="hidden" name="action" value="confirm" />
+                    <input type="hidden" name="ticketID" value="${ticket.ticketID}" />
+                    <input type="hidden" name="paymentMethod" value="CASH" />
+                    <input type="hidden" name="lostTicket" id="lostTicketHidden" value="false" />
+                    <button class="btn btn-success btn-flex-large" type="submit">
+                      Confirm Payment
+                    </button>
+                  </form>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </div>
         </div>
       </div>
     </main>
   </div>
   <jsp:include page="../includes/footer.jsp" />
+  <script src="static/js/staff_edit.js?v=2"></script>
 </body>
 
 </html>
