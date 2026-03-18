@@ -19,7 +19,7 @@
             <li><a href="VehicleOut" class="<%= uri.contains(" vehicle_out") ? "active" : "" %>"><i
                         class="fa-solid fa-arrow-right-from-bracket"></i> Check-Out</a></li>
             <li><a href="StaffHistory" class="<%= uri.contains("StaffHistory") ? "active" : "" %>"><i
-                        class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+                        class="fa-solid fa-clock-rotate-left"></i> Work History</a></li>
         </ul>
         <div class="sidebar-footer">
             <jsp:include page="header.jsp" />
