@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- Customer Navigation Bar Component -->
 <%String uri=request.getRequestURI();%>
     <!-- Mobile Header -->
@@ -14,10 +15,17 @@
     <aside class="sidebar">
         <a href="Profile" class="navbar-brand"><i class="fa-solid fa-user"></i> Customer Portal</a>
         <ul class="nav-links">
-            <li><a href="Profile" class="<%= uri.contains(" profile") ? "active" : "" %>"><i
+            <li><a href="Profile" class="<%= uri.toLowerCase().contains("profile") ? "active" : "" %>"><i
                         class="fa-solid fa-id-card"></i> Profile</a></li>
-            <li><a href="History" class="<%= uri.contains(" history") ? "active" : "" %>"><i
+            <li><a href="History" class="<%= uri.toLowerCase().contains("history") ? "active" : "" %>"><i
                         class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+            
+            <c:if test="${sessionScope.user.roleID == 1}">
+                <li><a href="Dashboard" class="text-warning mt-3"><i class="fa-solid fa-arrow-left"></i> Back to Admin Panel</a></li>
+            </c:if>
+            <c:if test="${sessionScope.user.roleID == 2}">
+                <li><a href="VehicleIn" class="text-warning mt-3"><i class="fa-solid fa-arrow-left"></i> Back to Staff Panel</a></li>
+            </c:if>
         </ul>
         <div class="sidebar-footer">
             <jsp:include page="header.jsp" />

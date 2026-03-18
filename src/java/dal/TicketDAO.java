@@ -359,4 +359,65 @@ public class TicketDAO extends DBContext {
 
         return list;
     }
+
+    public List<Ticket> getTicketHistoryByCustomerID(int customerID) {
+        List<Ticket> list = new ArrayList<>();
+        String sql = "SELECT t.*, vt.TypeName, s.SlotName, z.ZoneName, " +
+                     "tr.TransID, tr.ExitTime, tr.TotalAmount, tr.PaymentMethod " +
+                     "FROM Tickets t " +
+                     "JOIN VehicleTypes vt ON t.TypeID = vt.TypeID " +
+                     "JOIN Slots s ON t.SlotID = s.SlotID " +
+                     "JOIN Zones z ON s.ZoneID = z.ZoneID " +
+                     "LEFT JOIN Transactions tr ON t.TicketID = tr.TicketID " +
+                     "WHERE t.CustomerID = ? ORDER BY t.EntryTime DESC";
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, customerID);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                Ticket t = new Ticket();
+                t.setTicketID(rs.getInt("TicketID"));
+                t.setTicketCode(rs.getString("TicketCode"));
+                t.setLicensePlate(rs.getString("LicensePlate"));
+                t.setTypeID(rs.getInt("TypeID"));
+                t.setSlotID(rs.getInt("SlotID"));
+                t.setCustomerID(rs.getInt("CustomerID"));
+                
+                java.sql.Timestamp entryTs = rs.getTimestamp("EntryTime");
+                if (entryTs != null) {
+                    t.setEntryTime(entryTs.toLocalDateTime());
+                }
+                t.setHourlyRate(rs.getBigDecimal("HourlyRate"));
+                t.setDailyRate(rs.getBigDecimal("DailyRate"));
+                t.setStatus(rs.getString("Status"));
+                
+                models.VehicleType vt = new models.VehicleType(rs.getInt("TypeID"), rs.getString("TypeName"));
+                t.setVehicleType(vt);
+                
+                models.Slot s = new models.Slot();
+                s.setSlotID(rs.getInt("SlotID"));
+                s.setSlotName(rs.getString("SlotName"));
+                t.setSlot(s);
+                
+                int transID = rs.getInt("TransID");
+                if (!rs.wasNull()) {
+                    models.Transaction tr = new models.Transaction();
+                    tr.setTransID(transID);
+                    tr.setTicketID(rs.getInt("TicketID"));
+                    java.sql.Timestamp exitTs = rs.getTimestamp("ExitTime");
+                    if (exitTs != null) {
+                        tr.setExitTime(exitTs.toLocalDateTime());
+                    }
+                    tr.setTotalAmount(rs.getBigDecimal("TotalAmount"));
+                    tr.setPaymentMethod(rs.getString("PaymentMethod"));
+                    t.setTransaction(tr);
+                }
+                
+                list.add(t);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getTicketHistoryByCustomerID: " + e.getMessage());
+        }
+        return list;
+    }
 }

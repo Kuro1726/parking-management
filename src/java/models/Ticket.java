@@ -30,6 +30,7 @@ public class Ticket {
     private Slot slot;
     private User customer;
     private User createdByStaff;
+    private Transaction transaction;
 
     public Ticket() {
     }
@@ -166,5 +167,13 @@ public class Ticket {
 
     public void setCreatedByStaff(User createdByStaff) {
         this.createdByStaff = createdByStaff;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

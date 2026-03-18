@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html lang="en">
 
@@ -32,39 +34,44 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>TKT-00123</td>
-              <td>2026-03-05</td>
-              <td>30A-999.99</td>
-              <td>08:15 AM</td>
-              <td>17:30 PM</td>
-              <td>$45.00</td>
-              <td>
-                <span class="text-success fw-bold">Paid</span>
-              </td>
-            </tr>
-            <tr>
-              <td>TKT-00101</td>
-              <td>2026-03-04</td>
-              <td>29F1-123.45</td>
-              <td>09:00 AM</td>
-              <td>12:00 PM</td>
-              <td>$5.00</td>
-              <td>
-                <span class="text-success fw-bold">Paid</span>
-              </td>
-            </tr>
-            <tr>
-              <td>TKT-00250</td>
-              <td>2026-03-06</td>
-              <td>30A-999.99</td>
-              <td>08:00 AM</td>
-              <td>--:--</td>
-              <td>-</td>
-              <td>
-                <span class="text-danger fw-bold">Parking</span>
-              </td>
-            </tr>
+            <c:forEach var="t" items="${ticketHistory}">
+              <tr>
+                <td>${t.ticketCode}</td>
+                <td>
+                    ${t.entryTime.toLocalDate()}
+                </td>
+                <td>${t.licensePlate}</td>
+                <td>
+                    ${t.entryTime.toLocalTime().withNano(0)}
+                </td>
+                <td>
+                    ${not empty t.transaction ? t.transaction.exitTime.toLocalTime().withNano(0) : '--:--'}
+                </td>
+                <td>
+                    <c:if test="${not empty t.transaction}">
+                        $<fmt:formatNumber value="${t.transaction.totalAmount}" pattern="#,##0.00" />
+                    </c:if>
+                    <c:if test="${empty t.transaction}">
+                        -
+                    </c:if>
+                </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${t.status eq 'COMPLETED' || t.status eq 'Completed'}">
+                            <span class="text-success fw-bold">Paid</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="text-danger fw-bold">Parking</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
+              </tr>
+            </c:forEach>
+            <c:if test="${empty ticketHistory}">
+                <tr>
+                    <td colspan="7" class="text-center">No history found.</td>
+                </tr>
+            </c:if>
           </tbody>
         </table>
       </div>
