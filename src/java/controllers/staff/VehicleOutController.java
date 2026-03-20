@@ -143,7 +143,7 @@ public class VehicleOutController extends HttpServlet {
 
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
                 if (ticket == null) {
-                    session.setAttribute("errorMsg", "Không tìm thấy vé để thanh toán.");
+                    session.setAttribute("errorMsg", "Ticket not found for payment.");
                     response.sendRedirect("VehicleOut");
                     return;
                 }
@@ -179,9 +179,9 @@ public class VehicleOutController extends HttpServlet {
                 slotDAO.setSlotStatus(ticket.getSlotID(), "AVAILABLE");
 
                 if (statusUpdated && transCreated) {
-                    session.setAttribute("successMsg", "Thanh toán thành công.");
+                    session.setAttribute("successMsg", "Payment completed successfully.");
                 } else {
-                    session.setAttribute("errorMsg", "Thanh toán thất bại.");
+                    session.setAttribute("errorMsg", "Payment failed.");
                 }
                 response.sendRedirect("VehicleOut");
                 return;
@@ -189,7 +189,7 @@ public class VehicleOutController extends HttpServlet {
                 int ticketID = Integer.parseInt(request.getParameter("ticketID"));
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
                 if (ticket == null) {
-                    session.setAttribute("errorMsg", "Không tìm thấy vé để xử lý mất vé.");
+                    session.setAttribute("errorMsg", "Ticket not found for lost ticket processing.");
                     response.sendRedirect("VehicleOut");
                     return;
                 }
@@ -221,15 +221,15 @@ public class VehicleOutController extends HttpServlet {
                 slotDAO.setSlotStatus(ticket.getSlotID(), "AVAILABLE");
 
                 if (statusUpdated && transCreated) {
-                    session.setAttribute("successMsg", "Xử lý mất vé thành công.");
+                    session.setAttribute("successMsg", "Lost ticket processed successfully.");
                 } else {
-                    session.setAttribute("errorMsg", "Xử lý mất vé thất bại.");
+                    session.setAttribute("errorMsg", "Failed to process lost ticket.");
                 }
                 response.sendRedirect("VehicleOut");
                 return;
             }
         } catch (Exception e) {
-            session.setAttribute("errorMsg", "Dữ liệu không hợp lệ.");
+            session.setAttribute("errorMsg", "Invalid data provided.");
         }
 
         response.sendRedirect("VehicleOut");
