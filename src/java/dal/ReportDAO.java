@@ -47,7 +47,7 @@ public class ReportDAO extends DBContext {
                         .append(v.getTypeName()).append("Tickets")
                         .append("], ");
             }
-            
+
             System.out.println(tickets);
 
             String strSQL = """
@@ -124,7 +124,7 @@ public class ReportDAO extends DBContext {
                     vehicleRevenueList.add(vehicleRevenue);
                     vehicleTypeList.add(v.getTypeName());
                     totalTicketsByVehicleType.add(ticketsPerVehicle);
-                    
+
                     System.out.println(v.getTypeName());
                     System.out.println(ticketsPerVehicle);
                     System.out.println(vehicleRevenue);
@@ -151,9 +151,7 @@ public class ReportDAO extends DBContext {
         ArrayList<Report> reportList = new ArrayList<>();
 
         try {
-
             StringBuilder sumQuery = new StringBuilder();
-            StringBuilder vehicleName = new StringBuilder();
             StringBuilder tickets = new StringBuilder();
 
             for (VehicleType v : vehicleList) {
@@ -163,80 +161,80 @@ public class ReportDAO extends DBContext {
                         .append("' THEN tr.TotalAmount ELSE 0 END) AS [")
                         .append(v.getTypeName())
                         .append("], ");
-                vehicleName.append("m.[").append(v.getTypeName()).append("],");
 
                 tickets.append(
                         "SUM(CASE WHEN vt.TypeName = '")
                         .append(v.getTypeName())
                         .append("' THEN 1 ELSE 0 END) AS [")
-                        .append(v.getTypeName() + "Tickets")
+                        .append(v.getTypeName()).append("Tickets")
                         .append("], ");
             }
 
             String strSQL = """
-                            WITH TopRevenue AS (
-                                            SELECT 
-                                                FORMAT(tr.ExitTime, 'yyyy-MM') AS [Month],
-                                                vt.TypeName AS TopVehicleType,
-                                                SUM(tr.TotalAmount) AS TopRevenue,
-                                                ROW_NUMBER() OVER (
-                                                    PARTITION BY FORMAT(tr.ExitTime, 'yyyy-MM')
-                                                    ORDER BY SUM(tr.TotalAmount) DESC
-                                                ) AS rn
-                                            FROM Transactions tr
-                                            JOIN Tickets t ON tr.TicketID = t.TicketID
-                                            JOIN VehicleTypes vt ON t.TypeID = vt.TypeID
-                                            WHERE CAST(tr.ExitTime AS DATE) 
-                                                  BETWEEN ? AND ?
-                                            GROUP BY 
-                                                FORMAT(tr.ExitTime, 'yyyy-MM'),
-                                                vt.TypeName
-                                        ),
-                                        
-                                        MonthlySummary AS (
-                                            SELECT 
-                                                FORMAT(tr.ExitTime, 'yyyy-MM') AS [Month],
-                                        
-                                                COUNT(t.TicketID) AS TotalTickets,
-                            """ + tickets + sumQuery + """
-                                             SUM(tr.TotalAmount) AS TotalRevenue
-                                                 
-                                                     FROM Transactions tr
-                                                     JOIN Tickets t ON tr.TicketID = t.TicketID
-                                                     JOIN VehicleTypes vt ON t.TypeID = vt.TypeID
-                                                     WHERE CAST(tr.ExitTime AS DATE) 
-                                                           BETWEEN ? AND ?
-                                                     GROUP BY FORMAT(tr.ExitTime, 'yyyy-MM')
-                                                 )
-                                                 
-                                                 SELECT 
-                                                     m.Month,
-                                                     m.TotalTickets,
-                                                 """
-                    + vehicleName
-                    + """
-                                                     m.TotalRevenue,
-                                                     t.TopVehicleType,
-                                                     t.TopRevenue
-                                                 FROM MonthlySummary m
-                                                 LEFT JOIN TopRevenue t 
-                                                     ON m.Month = t.Month
-                                                     AND t.rn = 1
-                                                 ORDER BY m.Month DESC;
-                                             """;
+                WITH TopRevenue AS (
+                    SELECT 
+                        Month,
+                        TypeName AS TopVehicleType,
+                        Total AS TopRevenue
+                    FROM (
+                        SELECT 
+                            FORMAT(tr.ExitTime, 'yyyy-MM') AS Month,
+                            vt.TypeName,
+                            SUM(tr.TotalAmount) AS Total,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY FORMAT(tr.ExitTime, 'yyyy-MM')
+                                ORDER BY SUM(tr.TotalAmount) DESC
+                            ) AS rn
+                        FROM Transactions tr
+                        JOIN Tickets t ON tr.TicketID = t.TicketID
+                        JOIN VehicleTypes vt ON t.TypeID = vt.TypeID
+                        WHERE CAST(tr.ExitTime AS DATE) BETWEEN ? AND ?
+                        GROUP BY 
+                            FORMAT(tr.ExitTime, 'yyyy-MM'),
+                            vt.TypeName
+                    ) x
+                    WHERE rn = 1
+                ),
+
+                MonthlySummary AS (
+                    SELECT 
+                        FORMAT(tr.ExitTime, 'yyyy-MM') AS [Month],
+                        COUNT(t.TicketID) AS TotalTickets,
+        """ + tickets + sumQuery + """
+                        SUM(tr.TotalAmount) AS TotalRevenue
+                    FROM Transactions tr
+                    JOIN Tickets t ON tr.TicketID = t.TicketID
+                    JOIN VehicleTypes vt ON t.TypeID = vt.TypeID
+                    WHERE CAST(tr.ExitTime AS DATE) BETWEEN ? AND ?
+                    GROUP BY FORMAT(tr.ExitTime, 'yyyy-MM')
+                )
+
+                SELECT 
+                    m.*,
+                    t.TopVehicleType,
+                    t.TopRevenue
+                FROM MonthlySummary m
+                LEFT JOIN TopRevenue t 
+                    ON m.Month = t.Month
+                ORDER BY m.Month DESC;
+                """;
+
             stm = connection.prepareStatement(strSQL);
             stm.setString(1, startDate);
             stm.setString(2, endDate);
             stm.setString(3, startDate);
             stm.setString(4, endDate);
+
             rs = stm.executeQuery();
 
             while (rs.next()) {
                 Report report = new Report();
+
                 ArrayList<BigDecimal> vehicleRevenueList = report.getVehicleRevenueList();
                 ArrayList<String> vehicleTypeList = report.getVehicleTypeList();
                 ArrayList<Integer> totalTicketsByVehicleType = report.getTotalTicketsByVehicleType();
-                String month = rs.getString("month");
+
+                String month = rs.getString("Month"); // 👈 changed
                 int totalTickets = rs.getInt("TotalTickets");
                 BigDecimal totalRevenue = rs.getBigDecimal("TotalRevenue");
                 BigDecimal topRevenue = rs.getBigDecimal("TopRevenue");
@@ -245,25 +243,23 @@ public class ReportDAO extends DBContext {
                 for (VehicleType v : vehicleList) {
                     BigDecimal vehicleRevenue = rs.getBigDecimal(v.getTypeName());
                     int ticketsPerVehicle = rs.getInt(v.getTypeName() + "Tickets");
+
                     vehicleRevenueList.add(vehicleRevenue);
                     vehicleTypeList.add(v.getTypeName());
                     totalTicketsByVehicleType.add(ticketsPerVehicle);
-                    
-                    System.out.println(v.getTypeName());
-                    System.out.println(ticketsPerVehicle);
-                    System.out.println(vehicleRevenue);
-                    System.out.println("-------------");
                 }
 
-                report.setMonth(month);
+                report.setMonth(month); // 👈 you need this in Report class
                 report.setTotalTickets(totalTickets);
                 report.setTotalAmount(totalRevenue);
                 report.setTopRevenue(topRevenue);
                 report.setTopVehicle(topVehicleType);
+
                 reportList.add(report);
             }
 
             return reportList;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
