@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 public class ActivityLog {
     public LocalDateTime activityTime;
     public String licensePlate;
+    public String slot;
+    public String zone;
     public String actionType; // "Check-In" hoặc "Check-Out"
     public String staffName;
 
@@ -26,6 +28,14 @@ public class ActivityLog {
 
     public String getLicensePlate() {
         return licensePlate;
+    }
+
+    public String getSlot() {
+        return slot;
+    }
+
+    public String getZone() {
+        return zone;
     }
 
     public String getActionType() {
