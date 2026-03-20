@@ -57,6 +57,33 @@ public class CustomerVehicleDAO extends DBContext {
         return customerVehicleList;
     }
 
+    public CustomerVehicle getVehicleByLicensePlate(String licensePlate) {
+        String strSQL = """
+                        select c.VehicleID, c.UserID, c.LicensePlate, c.TypeID, v.TypeName 
+                        from CustomerVehicles c, VehicleTypes v
+                        where c.TypeID = v.TypeID and c.LicensePlate = ?
+                        """;
+        try {
+            stm = connection.prepareStatement(strSQL);
+            stm.setString(1, licensePlate);
+            rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int vehicleID = rs.getInt("VehicleID");
+                int userID = rs.getInt("UserID");
+                int typeID = rs.getInt("TypeID");
+                String typeName = rs.getString("TypeName");
+
+                VehicleType vehicleType = new VehicleType(typeID, typeName);
+                return new CustomerVehicle(vehicleID, userID, licensePlate, vehicleType);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public boolean addCustomerVehicle(CustomerVehicle customerVehicle) {
         String strSQL = """
                         insert into CustomerVehicles(UserID, LicensePlate, TypeID) values(?, ?, ?)

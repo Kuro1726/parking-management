@@ -101,6 +101,15 @@ public class VehicleInController extends HttpServlet {
                     return;
                 }
 
+                dal.CustomerVehicleDAO cvDAO = new dal.CustomerVehicleDAO();
+                models.CustomerVehicle registeredVehicle = cvDAO.getVehicleByLicensePlate(licensePlate);
+
+                if (registeredVehicle != null && registeredVehicle.getTypeID() != typeID) {
+                    session.setAttribute("errorMsg", "License Plate " + licensePlate + " is registered as a " + registeredVehicle.getVehicleType().getTypeName() + ". Cannot check into a mismatched slot/type!");
+                    response.sendRedirect("VehicleIn");
+                    return;
+                }
+
                 Ticket ticket = new Ticket();
 
                 // Tạo mã vé theo format VEX-yyMMdd-0001
@@ -108,7 +117,7 @@ public class VehicleInController extends HttpServlet {
                 ticket.setLicensePlate(licensePlate);
                 ticket.setTypeID(typeID);
                 ticket.setSlotID(slotID);
-                ticket.setCustomerID(null); // khách vãng lai
+                ticket.setCustomerID(registeredVehicle != null ? registeredVehicle.getUserID() : null); // nếu có đky thì map vào UserID, ko thì null
                 ticket.setCreatedBy(user.getUserID());
 
                 boolean created = ticketDAO.createTicket(ticket);
