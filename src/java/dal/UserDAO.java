@@ -30,6 +30,7 @@ public class UserDAO extends DBContext {
             String strSQL = """
                             SELECT U.*, R.RoleName
                             FROM Users U JOIN Roles R ON U.RoleID = R.RoleID
+                            WHERE U.Username != 'admin'
                             """;
 
             stm = connection.prepareCall(strSQL);
@@ -62,7 +63,7 @@ public class UserDAO extends DBContext {
             String strSQL = """
                             SELECT U.*, R.RoleName
                             FROM Users U JOIN Roles R ON U.RoleID = R.RoleID
-                            WHERE U.Username LIKE ?
+                            WHERE U.Username LIKE ? AND U.Username != 'admin'
                             """;
 
             stm = connection.prepareStatement(strSQL);
