@@ -39,7 +39,7 @@ public class SlotDAO extends DBContext {
             params.add(Integer.parseInt(zoneFilter));
         }
 
-        sql.append(" ORDER BY z.ZoneName, s.SlotName ASC");
+        sql.append(" ORDER BY z.ZoneName, LEN(s.SlotName), s.SlotName ASC");
 
         try {
             stm = connection.prepareStatement(sql.toString());

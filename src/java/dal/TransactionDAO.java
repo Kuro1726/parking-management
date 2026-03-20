@@ -24,17 +24,16 @@ public class TransactionDAO extends DBContext {
     /**
      * Tạo hóa đơn cho vé khi xe xuất bãi.
      */
-    public boolean createTransaction(int ticketID, BigDecimal totalAmount, String paymentMethod, int staffID) {
+    public boolean createTransaction(int ticketID, BigDecimal totalAmount, int staffID) {
         String sql = """
-                    INSERT INTO Transactions (TicketID, ExitTime, TotalAmount, PaymentMethod, StaffID, CreatedAt)
-                    VALUES (?, GETDATE(), ?, ?, ?, GETDATE())
+                    INSERT INTO Transactions (TicketID, ExitTime, TotalAmount, StaffID, CreatedAt)
+                    VALUES (?, GETDATE(), ?, ?, GETDATE())
                     """;
         try {
             stm = connection.prepareStatement(sql);
             stm.setInt(1, ticketID);
             stm.setBigDecimal(2, totalAmount);
-            stm.setString(3, paymentMethod);
-            stm.setInt(4, staffID);
+            stm.setInt(3, staffID);
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Error in createTransaction: " + e.getMessage());
@@ -66,7 +65,6 @@ public class TransactionDAO extends DBContext {
                     t.setExitTime(exitTs.toLocalDateTime());
                 }
                 t.setTotalAmount(rs.getBigDecimal("TotalAmount"));
-                t.setPaymentMethod(rs.getString("PaymentMethod"));
                 t.setStaffID(rs.getInt("StaffID"));
                 Timestamp createdTs = rs.getTimestamp("CreatedAt");
                 if (createdTs != null) {

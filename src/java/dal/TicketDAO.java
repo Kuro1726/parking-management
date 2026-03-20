@@ -415,7 +415,7 @@ public class TicketDAO extends DBContext {
     public List<Ticket> getTicketHistoryByCustomerID(int customerID) {
         List<Ticket> list = new ArrayList<>();
         String sql = "SELECT t.*, vt.TypeName, s.SlotName, z.ZoneName, " +
-                     "tr.TransID, tr.ExitTime, tr.TotalAmount, tr.PaymentMethod " +
+                     "tr.TransID, tr.ExitTime, tr.TotalAmount " +
                      "FROM Tickets t " +
                      "JOIN VehicleTypes vt ON t.TypeID = vt.TypeID " +
                      "JOIN Slots s ON t.SlotID = s.SlotID " +
@@ -461,7 +461,7 @@ public class TicketDAO extends DBContext {
                         tr.setExitTime(exitTs.toLocalDateTime());
                     }
                     tr.setTotalAmount(rs.getBigDecimal("TotalAmount"));
-                    tr.setPaymentMethod(rs.getString("PaymentMethod"));
+                    // Removed payment method mapping
                     t.setTransaction(tr);
                 }
                 

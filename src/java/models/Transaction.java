@@ -16,19 +16,17 @@ public class Transaction {
     private int ticketID;
     private LocalDateTime exitTime;
     private BigDecimal totalAmount;
-    private String paymentMethod;
     private int staffID;
     private LocalDateTime createdAt;
 
     public Transaction() {
     }
 
-    public Transaction(int transID, int ticketID, LocalDateTime exitTime, BigDecimal totalAmount, String paymentMethod, int staffID, LocalDateTime createdAt) {
+    public Transaction(int transID, int ticketID, LocalDateTime exitTime, BigDecimal totalAmount, int staffID, LocalDateTime createdAt) {
         this.transID = transID;
         this.ticketID = ticketID;
         this.exitTime = exitTime;
         this.totalAmount = totalAmount;
-        this.paymentMethod = paymentMethod;
         this.staffID = staffID;
         this.createdAt = createdAt;
     }
@@ -63,14 +61,6 @@ public class Transaction {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
     }
 
     public int getStaffID() {
