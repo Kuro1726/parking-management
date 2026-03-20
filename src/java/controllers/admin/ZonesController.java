@@ -96,8 +96,21 @@ public class ZonesController extends HttpServlet {
                 } else {
                     Zone newZone = new Zone(0, zoneName, description);
                     newZone.setTypeID(typeID);
-                    boolean success = zoneDAO.addZone(newZone);
-                    if (success) {
+                    int newZoneID = zoneDAO.addZone(newZone);
+                    if (newZoneID > 0) {
+                        String numSlotsStr = request.getParameter("numberOfSlots");
+                        if (numSlotsStr != null && !numSlotsStr.isEmpty()) {
+                            try {
+                                int numSlots = Integer.parseInt(numSlotsStr);
+                                if (numSlots > 0) {
+                                    dal.SlotDAO slotDAO = new dal.SlotDAO();
+                                    String prefix = zoneName.substring(0, 1).toUpperCase();
+                                    for (int i = 1; i <= numSlots; i++) {
+                                        slotDAO.addSlot(newZoneID, prefix + i, typeID, "Available");
+                                    }
+                                }
+                            } catch (NumberFormatException ignored) {}
+                        }
                         session.setAttribute("successMsg", "Zone added successfully.");
                     } else {
                         session.setAttribute("errorMsg", "Failed to add zone.");

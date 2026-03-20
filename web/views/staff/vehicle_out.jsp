@@ -131,7 +131,6 @@
               <form id="confirmForm" action="VehicleOut" method="post" style="display:inline-block;">
                 <input type="hidden" name="action" value="confirm" />
                 <input type="hidden" name="ticketID" value="${hasTicket ? ticket.ticketID : ''}" />
-                <input type="hidden" name="paymentMethod" value="CASH" />
                 <input type="hidden" name="lostTicket" id="lostTicketHidden" value="false" />
                 <button class="btn btn-success btn-flex-large" type="submit" ${hasTicket ? "" : "disabled"}>
                   Confirm Payment

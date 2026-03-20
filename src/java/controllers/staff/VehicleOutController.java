@@ -135,10 +135,6 @@ public class VehicleOutController extends HttpServlet {
                 return;
             } else if (action.equals("confirm")) {
                 int ticketID = Integer.parseInt(request.getParameter("ticketID"));
-                String paymentMethod = request.getParameter("paymentMethod");
-                if (paymentMethod == null || paymentMethod.isEmpty()) {
-                    paymentMethod = "CASH";
-                }
                 boolean lostTicket = "true".equalsIgnoreCase(request.getParameter("lostTicket"));
 
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
@@ -166,13 +162,12 @@ public class VehicleOutController extends HttpServlet {
                 BigDecimal totalAmount = hourly.multiply(BigDecimal.valueOf(hours));
                 if (lostTicket) {
                     totalAmount = totalAmount.add(LOST_TICKET_FEE);
-                    paymentMethod = "LOST_TICKET";
                 }
 
                 // Cập nhật trạng thái vé và tạo transaction
                 boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
                 TransactionDAO transDAO = new TransactionDAO();
-                boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, paymentMethod, user.getUserID());
+                boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, user.getUserID());
 
                 // Mở lại slot cho xe khác
                 SlotDAO slotDAO = new SlotDAO();
@@ -215,7 +210,7 @@ public class VehicleOutController extends HttpServlet {
 
                 boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
                 TransactionDAO transDAO = new TransactionDAO();
-                boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, "LOST_TICKET", user.getUserID());
+                boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, user.getUserID());
 
                 SlotDAO slotDAO = new SlotDAO();
                 slotDAO.setSlotStatus(ticket.getSlotID(), "AVAILABLE");

@@ -155,19 +155,25 @@ public class ZoneDAO extends DBContext {
         return false;
     }
 
-    public boolean addZone(Zone zone) {
+    public int addZone(Zone zone) {
         String sql = "INSERT INTO Zones (ZoneName, Description, TypeID) VALUES (?, ?, ?)";
         try {
-            stm = connection.prepareStatement(sql);
+            stm = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, zone.getZoneName());
             stm.setString(2, zone.getDescription());
             stm.setInt(3, zone.getTypeID());
-            stm.executeUpdate();
-            return true;
+            int affectedRows = stm.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stm.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);
+                    }
+                }
+            }
         } catch (SQLException e) {
             System.out.println("Error in addZone: " + e.getMessage());
-            return false;
         }
+        return -1;
     }
 
     public boolean editZone(Zone zone) {
