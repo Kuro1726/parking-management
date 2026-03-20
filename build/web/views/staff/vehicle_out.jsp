@@ -128,12 +128,21 @@
             </div>
 
             <div class="invoice-actions">
-              <form id="confirmForm" action="VehicleOut" method="post" style="display:inline-block;">
+              <form id="confirmForm" action="VehicleOut" method="post" style="display:block;">
                 <input type="hidden" name="action" value="confirm" />
                 <input type="hidden" name="ticketID" value="${hasTicket ? ticket.ticketID : ''}" />
-                <input type="hidden" name="paymentMethod" value="CASH" />
+                
+                <div class="form-group" style="text-align: left; margin-bottom: 15px;">
+                  <label for="paymentMethod" style="font-weight: 600;">Payment Method</label>
+                  <select name="paymentMethod" id="paymentMethod" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px;" ${hasTicket ? "" : "disabled"}>
+                    <c:forEach items="${paymentMethods}" var="pm">
+                        <option value="${pm}">${pm}</option>
+                    </c:forEach>
+                  </select>
+                </div>
+
                 <input type="hidden" name="lostTicket" id="lostTicketHidden" value="false" />
-                <button class="btn btn-success btn-flex-large" type="submit" ${hasTicket ? "" : "disabled"}>
+                <button class="btn btn-success btn-flex-large" type="submit" style="width: 100%;" ${hasTicket ? "" : "disabled"}>
                   Confirm Payment
                 </button>
               </form>

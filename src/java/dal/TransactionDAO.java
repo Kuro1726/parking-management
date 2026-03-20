@@ -79,4 +79,24 @@ public class TransactionDAO extends DBContext {
         }
         return list;
     }
+
+    public List<String> getAvailablePaymentMethods() {
+        List<String> methods = new ArrayList<>();
+        String sql = "SELECT DISTINCT PaymentMethod FROM Transactions WHERE PaymentMethod IS NOT NULL AND PaymentMethod != 'LOST_TICKET'";
+        try {
+            stm = connection.prepareStatement(sql);
+            rs = stm.executeQuery();
+            while (rs.next()) {
+                methods.add(rs.getString("PaymentMethod"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error in getAvailablePaymentMethods: " + e.getMessage());
+        }
+        // Fallback in case DB is completely empty and has no transaction records yet
+        if (methods.isEmpty()) {
+            methods.add("CASH");
+            methods.add("E-WALLET");
+        }
+        return methods;
+    }
 }

@@ -62,6 +62,9 @@ public class VehicleOutController extends HttpServlet {
         dal.VehicleTypeDAO vtDAO = new dal.VehicleTypeDAO();
         request.setAttribute("vehicleTypes", vtDAO.getAllTypes());
         
+        dal.TransactionDAO transDAO = new dal.TransactionDAO();
+        request.setAttribute("paymentMethods", transDAO.getAvailablePaymentMethods());
+        
         rd = request.getRequestDispatcher("views/staff/vehicle_out.jsp");
         rd.forward(request, response);
     }
@@ -129,6 +132,8 @@ public class VehicleOutController extends HttpServlet {
                 request.setAttribute("activeTickets", ticketDAO.getActiveTicketsList());
                 dal.VehicleTypeDAO vtDAO = new dal.VehicleTypeDAO();
                 request.setAttribute("vehicleTypes", vtDAO.getAllTypes());
+                dal.TransactionDAO transDAO = new dal.TransactionDAO();
+                request.setAttribute("paymentMethods", transDAO.getAvailablePaymentMethods());
                 
                 RequestDispatcher rd = request.getRequestDispatcher("views/staff/vehicle_out.jsp");
                 rd.forward(request, response);
