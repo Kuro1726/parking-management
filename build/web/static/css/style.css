@@ -1231,9 +1231,9 @@ input[type="date"]:focus {
 }
 
 .slot-cell.slot-occupied {
-  background: #eef4ff;
-  border-color: #9bb7ff;
-  color: #1341a3;
+  background: #fce8e6;
+  border-color: #f5c2c7;
+  color: #842029;
 }
 
 .slot-cell.slot-maintenance {

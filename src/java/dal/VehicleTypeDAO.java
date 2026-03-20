@@ -80,4 +80,30 @@ public class VehicleTypeDAO extends DBContext {
 
         return createVehicleType(typeName);
     }
+
+    public boolean updateVehicleType(int typeId, String typeName) {
+        String sql = "UPDATE VehicleTypes SET TypeName = ? WHERE TypeID = ?";
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setString(1, typeName.trim());
+            stm.setInt(2, typeId);
+            return stm.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updateVehicleType: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public String deleteVehicleType(int typeId) {
+        String sql = "DELETE FROM VehicleTypes WHERE TypeID = ?";
+        try {
+            stm = connection.prepareStatement(sql);
+            stm.setInt(1, typeId);
+            int rows = stm.executeUpdate();
+            return rows > 0 ? "success" : "Vehicle Type not found.";
+        } catch (SQLException e) {
+            System.out.println("Error deleteVehicleType: " + e.getMessage());
+            return "Cannot delete this Vehicle Type because it is being used by existing Zones, Slots, or Tickets.";
+        }
+    }
 }

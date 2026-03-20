@@ -21,8 +21,10 @@
           <div class="container main-content full-width">
             <div class="page-header gap-10">
               <h2><i class="fa-solid fa-layer-group"></i> Zone Management</h2>
-              <button class="btn btn-success" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New
-                Zone</button>
+              <div style="display: flex; gap: 10px;">
+                  <a href="Zones?tab=vehicleTypes" class="btn btn-primary"><i class="fa-solid fa-car"></i> Manage Vehicle Types</a>
+                  <button class="btn btn-success" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Add New Zone</button>
+              </div>
             </div>
 
             <c:if test="${not empty sessionScope.successMsg}">
@@ -94,7 +96,7 @@
                         <td>${zone.capacity} slots</td>
                         <td style="white-space: nowrap; display: flex; gap: 5px;">
                           <button class="btn btn-info btn-sm"
-                            onclick="openDetailModal('${zone.zoneName}', '${zone.capacity}', '${zone.typeName}', '${zone.description}')"><i
+                            onclick="openDetailModal(this, '${zone.zoneName}', '${zone.capacity}', '${zone.typeName}', '${zone.description}')"><i
                               class="fa-solid fa-circle-info"></i> Detail</button>
                           <button class="btn btn-sm"
                             onclick="openEditModal(${zone.zoneID}, '${zone.zoneName}', '${zone.typeName}', '${zone.description}')"><i
@@ -204,7 +206,9 @@
         </div>
       </div>
 
-      <script src="static/js/admin_edit.js"></script>
+
+
+      <script src="static/js/admin_edit.js?v=2"></script>
     </body>
 
     </html>

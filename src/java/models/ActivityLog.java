@@ -51,7 +51,7 @@ public class ActivityLog {
     public String getStaffName() {
         return staffName;
     }
-    
+
     public String getFormattedTime() {
         if (activityTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/M/yyyy");
@@ -67,6 +67,9 @@ public class ActivityLog {
     public String getFormattedAmount() {
         if (amount != null && amount.compareTo(java.math.BigDecimal.ZERO) > 0) {
             return utils.FormatCurrency.formatVND(amount);
+        }
+        if ("Check-In".equals(actionType)) {
+            return "";
         }
         return "0 ₫";
     }

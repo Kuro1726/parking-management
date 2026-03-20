@@ -92,6 +92,8 @@ public class ReportController extends HttpServlet {
 
         request.setAttribute("totalAmount", totalAmountAndTickets.getTotalAmount());
         request.setAttribute("totalTickets", totalAmountAndTickets.getTotalTickets());
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
         request.setAttribute("period", "daily");
         request.setAttribute("reportList", reportList);
         request.setAttribute("vehicleList", vehicleList);

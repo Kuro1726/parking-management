@@ -50,8 +50,9 @@
                             <select name="staffFilter" id="staffFilter" class="filter-select" style="min-width: 150px;">
                                 <option value="all" ${empty param.staffFilter or param.staffFilter == 'all' ? 'selected' : ''}>All Staff</option>
                                 <c:forEach items="${staffList}" var="st">
-                                    <c:set var="strId" value="${st.userID}" />
-                                    <option value="${st.userID}" ${param.staffFilter == strId ? 'selected' : ''}>${st.fullName}</option>
+                                    <c:set var="strId" value="st_${st.userID}" />
+                                    <c:set var="paramId" value="st_${param.staffFilter}" />
+                                    <option value="${st.userID}" ${paramId == strId ? 'selected' : ''}>${st.fullName}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -109,15 +110,15 @@
                                         <td>
                                             <c:choose>
                                                 <c:when test="${activity.actionType == 'Check-In'}">
-                                                    <span class="alert-success badge">${activity.actionType}</span>
+                                                    <span class="alert-danger badge">${activity.actionType}</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <span class="alert-danger badge">${activity.actionType}</span>
+                                                    <span class="alert-success badge">${activity.actionType}</span>
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>${activity.staffName}</td>
-                                        <td style="font-weight: bold; color: ${activity.actionType == 'Check-Out' ? '#e74c3c' : '#333'}">
+                                        <td style="font-weight: bold; color: ${activity.actionType == 'Check-Out' ? '#27ae60' : '#333'}">
                                             ${activity.formattedAmount}
                                         </td>
                                     </tr>
