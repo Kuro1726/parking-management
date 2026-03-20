@@ -153,9 +153,10 @@
                     <input type="hidden" name="action" value="add">
                     <div class="form-group">
                         <label>Zone</label>
-                        <select name="zoneID" required>
+                        <select name="zoneID" id="addSlotZoneFilter" onchange="autoSelectType()" required>
+                            <option value="">-- Select Zone --</option>
                             <c:forEach items="${zones}" var="z">
-                                <option value="${z.zoneID}">${z.zoneName}</option>
+                                <option value="${z.zoneID}" data-typeid="${z.typeID}">${z.zoneName}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -165,7 +166,7 @@
                     </div>
                     <div class="form-group">
                         <label>Vehicle Type</label>
-                        <select name="typeID" required>
+                        <select name="typeID" id="addSlotTypeFilter" required>
                             <c:forEach items="${types}" var="t">
                                 <option value="${t.typeID}">${t.typeName}</option>
                             </c:forEach>
@@ -253,6 +254,19 @@
         </div>
 
         <script src="static/js/admin_edit.js"></script>
+        <script>
+            function autoSelectType() {
+                var zoneSelect = document.getElementById('addSlotZoneFilter');
+                var typeSelect = document.getElementById('addSlotTypeFilter');
+                if (zoneSelect.selectedIndex > 0) {
+                    var selectedOption = zoneSelect.options[zoneSelect.selectedIndex];
+                    var typeID = selectedOption.getAttribute('data-typeid');
+                    if (typeID) {
+                        typeSelect.value = typeID;
+                    }
+                }
+            }
+        </script>
     </body>
 
 </html>

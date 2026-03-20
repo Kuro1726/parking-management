@@ -55,6 +55,9 @@ public class VehicleInController extends HttpServlet {
         List<Slot> slots = slotDAO.getAllSlots(null, null);
         request.setAttribute("slots", slots);
 
+        dal.VehicleTypeDAO vtDAO = new dal.VehicleTypeDAO();
+        request.setAttribute("vehicleTypes", vtDAO.getAllTypes());
+
         rd = request.getRequestDispatcher("views/staff/vehicle_in.jsp");
         rd.forward(request, response);
     }
@@ -90,6 +93,14 @@ public class VehicleInController extends HttpServlet {
                 int slotID = Integer.parseInt(request.getParameter("assignedSlot"));
 
                 TicketDAO ticketDAO = new TicketDAO();
+
+                Ticket activeTicket = ticketDAO.findActiveTicketByPlate(licensePlate);
+                if (activeTicket != null) {
+                    session.setAttribute("errorMsg", "License plate " + licensePlate + " is already checked in.");
+                    response.sendRedirect("VehicleIn");
+                    return;
+                }
+
                 Ticket ticket = new Ticket();
 
                 // Tạo mã vé theo format VEX-yyMMdd-0001
@@ -106,12 +117,12 @@ public class VehicleInController extends HttpServlet {
                     // Đánh dấu slot đang được sử dụng
                     SlotDAO slotDAO = new SlotDAO();
                     slotDAO.setSlotStatus(slotID, "OCCUPIED");
-                    session.setAttribute("successMsg", "Check-in thành công.");
+                    session.setAttribute("successMsg", "Check-in successful.");
                 } else {
-                    session.setAttribute("errorMsg", "Check-in thất bại. Vui lòng thử lại.");
+                    session.setAttribute("errorMsg", "Check-in failed. Please try again.");
                 }
             } catch (Exception e) {
-                session.setAttribute("errorMsg", "Dữ liệu không hợp lệ.");
+                session.setAttribute("errorMsg", "Invalid data provided.");
             }
             response.sendRedirect("VehicleIn");
         } else {

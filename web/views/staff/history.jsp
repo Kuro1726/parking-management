@@ -70,10 +70,10 @@
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${h.actionType == 'CHECK-IN'}">
-                                                            <span class="badge badge-info">Check-In</span>
+                                                            <span style="background-color: #e6f4ea; color: #1e8e3e; padding: 4px 8px; font-weight: 500; border-radius: 4px;">Check-In</span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="badge badge-success">Check-Out</span>
+                                                            <span style="background-color: #fce8e6; color: #d93025; padding: 4px 8px; font-weight: 500; border-radius: 4px;">Check-Out</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>

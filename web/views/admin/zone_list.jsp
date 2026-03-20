@@ -144,6 +144,10 @@
               <label>Description</label>
               <textarea name="description" rows="3" required></textarea>
             </div>
+            <div class="form-group">
+              <label>Number of Initial Slots (Optional)</label>
+              <input type="number" name="numberOfSlots" min="0" value="0" placeholder="e.g. 10">
+            </div>
             <button type="submit" class="btn btn-success" style="width: 100%;">Save Zone</button>
           </form>
         </div>

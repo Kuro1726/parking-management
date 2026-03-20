@@ -30,6 +30,7 @@ public class Ticket {
     private Slot slot;
     private User customer;
     private User createdByStaff;
+    private Transaction transaction;
 
     public Ticket() {
     }
@@ -104,6 +105,11 @@ public class Ticket {
         this.entryTime = entryTime;
     }
 
+    public String getEntryTimeFormatted() {
+        if (entryTime == null) return "-";
+        return entryTime.format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy"));
+    }
+
     public BigDecimal getHourlyRate() {
         return hourlyRate;
     }
@@ -166,5 +172,13 @@ public class Ticket {
 
     public void setCreatedByStaff(User createdByStaff) {
         this.createdByStaff = createdByStaff;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

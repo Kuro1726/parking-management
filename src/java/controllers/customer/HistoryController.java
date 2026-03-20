@@ -64,6 +64,10 @@ public class HistoryController extends HttpServlet {
         if (user == null) {
             rd = request.getRequestDispatcher("views/auth/login.jsp");
         } else {
+            dal.TicketDAO ticketDAO = new dal.TicketDAO();
+            java.util.List<models.Ticket> ticketHistory = ticketDAO.getTicketHistoryByCustomerID(user.getUserID());
+            request.setAttribute("ticketHistory", ticketHistory);
+            
             rd = request.getRequestDispatcher("views/customer/history.jsp");
         }
         rd.forward(request, response);
