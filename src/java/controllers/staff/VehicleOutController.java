@@ -165,13 +165,13 @@ public class VehicleOutController extends HttpServlet {
                 }
 
                 // Cập nhật trạng thái vé và tạo transaction
-                boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
+                boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "Completed");
                 TransactionDAO transDAO = new TransactionDAO();
                 boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, user.getUserID());
 
                 // Mở lại slot cho xe khác
                 SlotDAO slotDAO = new SlotDAO();
-                slotDAO.setSlotStatus(ticket.getSlotID(), "AVAILABLE");
+                slotDAO.setSlotStatus(ticket.getSlotID(), "Available");
 
                 if (statusUpdated && transCreated) {
                     session.setAttribute("successMsg", "Payment completed successfully.");
@@ -208,12 +208,12 @@ public class VehicleOutController extends HttpServlet {
                 BigDecimal baseAmount = hourly.multiply(BigDecimal.valueOf(hours));
                 BigDecimal totalAmount = baseAmount.add(LOST_TICKET_FEE);
 
-                boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "COMPLETED");
+                boolean statusUpdated = ticketDAO.updateTicketStatus(ticketID, "Completed");
                 TransactionDAO transDAO = new TransactionDAO();
                 boolean transCreated = transDAO.createTransaction(ticketID, totalAmount, user.getUserID());
 
                 SlotDAO slotDAO = new SlotDAO();
-                slotDAO.setSlotStatus(ticket.getSlotID(), "AVAILABLE");
+                slotDAO.setSlotStatus(ticket.getSlotID(), "Available");
 
                 if (statusUpdated && transCreated) {
                     session.setAttribute("successMsg", "Lost ticket processed successfully.");

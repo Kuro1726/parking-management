@@ -77,7 +77,7 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
-                                                <td>${h.status}</td>
+                                                <td><span style="text-transform: capitalize;">${h.status.toLowerCase()}</span></td>
                                             </tr>
                                         </c:forEach>
                                     </c:otherwise>
