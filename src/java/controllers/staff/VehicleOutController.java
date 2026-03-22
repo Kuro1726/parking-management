@@ -138,8 +138,8 @@ public class VehicleOutController extends HttpServlet {
                 boolean lostTicket = "true".equalsIgnoreCase(request.getParameter("lostTicket"));
 
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
-                if (ticket == null) {
-                    session.setAttribute("errorMsg", "Ticket not found for payment.");
+                if (ticket == null || !"Active".equalsIgnoreCase(ticket.getStatus())) {
+                    session.setAttribute("errorMsg", "Ticket not found or already completed.");
                     response.sendRedirect("VehicleOut");
                     return;
                 }
@@ -183,8 +183,8 @@ public class VehicleOutController extends HttpServlet {
             } else if (action.equals("lost")) {
                 int ticketID = Integer.parseInt(request.getParameter("ticketID"));
                 Ticket ticket = ticketDAO.getTicketById(ticketID);
-                if (ticket == null) {
-                    session.setAttribute("errorMsg", "Ticket not found for lost ticket processing.");
+                if (ticket == null || !"Active".equalsIgnoreCase(ticket.getStatus())) {
+                    session.setAttribute("errorMsg", "Ticket not found or already completed.");
                     response.sendRedirect("VehicleOut");
                     return;
                 }

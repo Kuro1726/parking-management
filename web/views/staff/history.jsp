@@ -20,11 +20,11 @@
                     <h2><i class="fa-solid fa-clock-rotate-left"></i> My Ticket History</h2>
 
                     <c:if test="${not empty sessionScope.successMsg}">
-                        <div class="alert alert-success">${sessionScope.successMsg}</div>
+                        <div class="alert alert-success"><c:out value="${sessionScope.successMsg}" /></div>
                         <c:remove var="successMsg" scope="session" />
                     </c:if>
                     <c:if test="${not empty sessionScope.errorMsg}">
-                        <div class="alert alert-danger">${sessionScope.errorMsg}</div>
+                        <div class="alert alert-danger"><c:out value="${sessionScope.errorMsg}" /></div>
                         <c:remove var="errorMsg" scope="session" />
                     </c:if>
 
@@ -92,4 +92,5 @@
     </body>
 
 </html>
+
 

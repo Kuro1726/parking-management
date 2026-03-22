@@ -34,6 +34,11 @@ public class VehicleTypeDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getAllTypes: " + e.getMessage());
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
         return types;
     }
@@ -50,6 +55,11 @@ public class VehicleTypeDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error finding VehicleType: " + e.getMessage());
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
         return -1;
     }
@@ -67,6 +77,11 @@ public class VehicleTypeDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error creating VehicleType: " + e.getMessage());
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
         return -1;
     }
@@ -90,6 +105,11 @@ public class VehicleTypeDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error updateVehicleType: " + e.getMessage());
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
         return false;
     }
@@ -104,6 +124,11 @@ public class VehicleTypeDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error deleteVehicleType: " + e.getMessage());
             return "Cannot delete this Vehicle Type because it is being used by existing Zones, Slots, or Tickets.";
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
     }
 }

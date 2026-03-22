@@ -50,6 +50,26 @@ public class VehicleInController extends HttpServlet {
             }
         }
 
+        String action = request.getParameter("action");
+        if ("checkPlate".equals(action)) {
+            String licensePlate = request.getParameter("plate");
+            if (licensePlate == null) licensePlate = "";
+            licensePlate = licensePlate.trim();
+            
+            dal.CustomerVehicleDAO cvDAO = new dal.CustomerVehicleDAO();
+            models.CustomerVehicle cv = cvDAO.getVehicleByLicensePlate(licensePlate);
+            
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            
+            if (cv != null) {
+                response.getWriter().write("{\"found\":true, \"typeID\":" + cv.getTypeID() + "}");
+            } else {
+                response.getWriter().write("{\"found\":false}");
+            }
+            return;
+        }
+
         // Lấy danh sách slot để staff chọn khi check-in
         SlotDAO slotDAO = new SlotDAO();
         List<Slot> slots = slotDAO.getAllSlots(null, null);
@@ -125,7 +145,7 @@ public class VehicleInController extends HttpServlet {
                 if (created) {
                     // Đánh dấu slot đang được sử dụng
                     SlotDAO slotDAO = new SlotDAO();
-                    slotDAO.setSlotStatus(slotID, "OCCUPIED");
+                    slotDAO.setSlotStatus(slotID, "Occupied");
                     session.setAttribute("successMsg", "Check-in successful.");
                 } else {
                     session.setAttribute("errorMsg", "Check-in failed. Please try again.");

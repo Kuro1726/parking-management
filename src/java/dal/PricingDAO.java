@@ -47,6 +47,11 @@ public class PricingDAO extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return pricingList;
@@ -64,6 +69,11 @@ public class PricingDAO extends DBContext {
 
         } catch (SQLException e) {
             System.out.println(e);
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
         return false;
     }
@@ -89,6 +99,11 @@ public class PricingDAO extends DBContext {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return pricing;
@@ -111,6 +126,11 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return false;
@@ -129,6 +149,11 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return false;
@@ -145,6 +170,11 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return false;

@@ -142,6 +142,11 @@ public class ReportDAO extends DBContext {
             return reportList;
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return null;
@@ -262,6 +267,11 @@ public class ReportDAO extends DBContext {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return null;
@@ -292,6 +302,11 @@ public class ReportDAO extends DBContext {
             return report;
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return null;
@@ -331,6 +346,11 @@ public class ReportDAO extends DBContext {
             return report;
         } catch (SQLException e) {
             e.printStackTrace();
+        
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (stm != null) stm.close(); } catch (Exception e) {}
+            try { if (connection != null) connection.close(); } catch (Exception e) {}
         }
 
         return null;

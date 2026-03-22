@@ -141,6 +141,28 @@
     slotSelect.addEventListener('change', updatePreview);
     if (licenseInput) {
       licenseInput.addEventListener('input', updatePreview);
+      
+      let debounceTimer;
+      licenseInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function() {
+          const plate = licenseInput.value.trim();
+          if (plate.length >= 4) {
+            fetch('VehicleIn?action=checkPlate&plate=' + encodeURIComponent(plate))
+              .then(res => res.json())
+              .then(data => {
+                if (data.found && data.typeID) {
+                  const newTypeStr = String(data.typeID);
+                  if (vehicleTypeSelect.value !== newTypeStr) {
+                    vehicleTypeSelect.value = newTypeStr;
+                    filterSlotsByType();
+                  }
+                }
+              })
+              .catch(err => console.error("Error checking plate:", err));
+          }
+        }, 500);
+      });
     }
 
     filterSlotsByType();

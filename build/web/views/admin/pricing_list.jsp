@@ -27,11 +27,11 @@
                     </div>
 
                     <c:if test="${not empty successMsg}">
-                        <div class="alert alert-success">${successMsg}</div>
+                        <div class="alert alert-success"><c:out value="${successMsg}" /></div>
                         <c:remove var="successMsg" scope="request" />
                     </c:if>
                     <c:if test="${not empty errorMsg}">
-                        <div class="alert alert-danger">${errorMsg}</div>
+                        <div class="alert alert-danger"><c:out value="${errorMsg}" /></div>
                         <c:remove var="errorMsg" scope="request" />
                     </c:if>
 
@@ -129,6 +129,7 @@
         <script src="static/js/admin_edit.js"></script>
     </body>
 </html>
+
 
 
 

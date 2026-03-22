@@ -39,7 +39,7 @@ public class Report {
     }
     
     public Report(String month, int totalTickets, ArrayList<BigDecimal> vehicleRevenueList, BigDecimal totalAmount) {
-        this.date = date;
+        this.month = month;
         this.totalTickets = totalTickets;
         this.vehicleRevenueList = vehicleRevenueList;
         this.totalAmount = totalAmount;
