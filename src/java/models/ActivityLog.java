@@ -17,8 +17,9 @@ public class ActivityLog {
     public String slot;
     public String zone;
     public String vehicleType;
-    public String actionType; // "Check-In" hoặc "Check-Out"
+    public String actionType; // "Check-In" hoac "Check-Out"
     public String staffName;
+    public java.math.BigDecimal amount;
 
     public ActivityLog() {
     }
@@ -50,12 +51,26 @@ public class ActivityLog {
     public String getStaffName() {
         return staffName;
     }
-    
+
     public String getFormattedTime() {
         if (activityTime != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/M/yyyy");
             return activityTime.format(formatter);
         }
         return "";
+    }
+
+    public java.math.BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getFormattedAmount() {
+        if (amount != null && amount.compareTo(java.math.BigDecimal.ZERO) > 0) {
+            return utils.FormatCurrency.formatVND(amount);
+        }
+        if ("Check-In".equals(actionType)) {
+            return "";
+        }
+        return "0 ₫";
     }
 }

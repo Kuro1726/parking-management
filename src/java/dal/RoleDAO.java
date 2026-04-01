@@ -33,6 +33,7 @@ public class RoleDAO extends DBContext {
             }
         } catch (Exception ex) {
             System.out.println("getAllRoles Error: " + ex.getMessage());
+        
         }
         return roles;
     }

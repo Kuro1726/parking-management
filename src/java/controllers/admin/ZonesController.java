@@ -54,11 +54,17 @@ public class ZonesController extends HttpServlet {
 
         request.setAttribute("vehicleTypesList", vehicleTypesList);
 
-        request.setAttribute("allZones", allZones);
-        request.setAttribute("zones", zones);
-        request.setAttribute("searchKeyword", vehicleTypeSearch);
+        request.setAttribute("vehicleTypesList", vehicleTypesList);
 
-        rd = request.getRequestDispatcher("views/admin/zone_list.jsp");
+        if ("vehicleTypes".equals(request.getParameter("tab"))) {
+            rd = request.getRequestDispatcher("views/admin/vehicle_type_list.jsp");
+        } else {
+            request.setAttribute("allZones", allZones);
+            request.setAttribute("zones", zones);
+            request.setAttribute("searchKeyword", vehicleTypeSearch);
+            rd = request.getRequestDispatcher("views/admin/zone_list.jsp");
+        }
+
         rd.forward(request, response);
     }
 
@@ -144,12 +150,43 @@ public class ZonesController extends HttpServlet {
                 } else {
                     session.setAttribute("errorMsg", resultMsg);
                 }
+            } else if (action.equals("addType")) {
+                String typeName = request.getParameter("typeName");
+                if (typeDAO.findTypeIdByName(typeName) != -1) {
+                    session.setAttribute("errorMsg", "Vehicle Type already exists.");
+                } else {
+                    typeDAO.createVehicleType(typeName);
+                    session.setAttribute("successMsg", "Vehicle Type added.");
+                }
+            } else if (action.equals("editType")) {
+                int typeID = Integer.parseInt(request.getParameter("typeID"));
+                String typeName = request.getParameter("typeName");
+                int existing = typeDAO.findTypeIdByName(typeName);
+                if (existing != -1 && existing != typeID) {
+                    session.setAttribute("errorMsg", "Another Vehicle Type with this Name already exists.");
+                } else {
+                    typeDAO.updateVehicleType(typeID, typeName);
+                    session.setAttribute("successMsg", "Vehicle Type updated.");
+                }
+            } else if (action.equals("deleteType")) {
+                int typeID = Integer.parseInt(request.getParameter("typeID"));
+                String resultMsg = typeDAO.deleteVehicleType(typeID);
+                if ("success".equals(resultMsg)) {
+                    session.setAttribute("successMsg", "Vehicle Type deleted.");
+                } else {
+                    session.setAttribute("errorMsg", resultMsg);
+                }
             }
         } catch (Exception e) {
             session.setAttribute("errorMsg", "Invalid input Data.");
         }
 
-        response.sendRedirect("Zones");
+        boolean isTypeAction = action != null && (action.equals("addType") || action.equals("editType") || action.equals("deleteType"));
+        if (isTypeAction) {
+            response.sendRedirect("Zones?tab=vehicleTypes");
+        } else {
+            response.sendRedirect("Zones");
+        }
     }
 
     @Override

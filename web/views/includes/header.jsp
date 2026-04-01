@@ -23,7 +23,7 @@
         <c:choose>
           <c:when test="${currentUser.roleID == 1}">ADMIN</c:when>
           <c:when test="${currentUser.roleID == 2}">STAFF</c:when>
-          <c:otherwise>User</c:otherwise>
+          <c:otherwise>USER</c:otherwise>
         </c:choose>
       </div>
     </div>

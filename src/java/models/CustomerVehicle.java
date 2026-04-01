@@ -23,12 +23,11 @@ public class CustomerVehicle {
         this.vehicleID = vehicleID;
         this.userID = userID;
         this.licensePlate = licensePlate;
-        this.typeID = typeID;
+        this.typeID = vehicleType != null ? vehicleType.getTypeID() : 0;
         this.vehicleType = vehicleType;
     }
 
-    public CustomerVehicle(int userID, String licensePlate,int typeID, VehicleType vehicleType) {
-        this.vehicleID = vehicleID;
+    public CustomerVehicle(int userID, String licensePlate, int typeID, VehicleType vehicleType) {
         this.userID = userID;
         this.licensePlate = licensePlate;
         this.typeID = typeID;

@@ -66,6 +66,7 @@ public class SlotDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getAllSlots: " + e.getMessage());
+        
         }
         return slots;
     }
@@ -80,6 +81,7 @@ public class SlotDAO extends DBContext {
             return rs.next();
         } catch (SQLException e) {
             System.out.println("Error in checkSlotExist: " + e.getMessage());
+        
         }
         return false;
     }
@@ -95,6 +97,7 @@ public class SlotDAO extends DBContext {
             return rs.next();
         } catch (SQLException e) {
             System.out.println("Error in checkSlotExistForUpdate: " + e.getMessage());
+        
         }
         return false;
     }
@@ -110,6 +113,7 @@ public class SlotDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error in addSlot: " + e.getMessage());
+        
         }
         return false;
     }
@@ -126,6 +130,7 @@ public class SlotDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error in updateSlot: " + e.getMessage());
+        
         }
         return false;
     }
@@ -154,12 +159,13 @@ public class SlotDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error in deleteSlot: " + e.getMessage());
+        
         }
         return false;
     }
 
     /**
-     * Cập nhật trạng thái của Slot (AVAILABLE, OCCUPIED, MAINTENANCE).
+     * Cap nhat trang thai cua Slot (AVAILABLE, OCCUPIED, MAINTENANCE).
      */
     public boolean setSlotStatus(int slotID, String status) {
         String sql = "UPDATE Slots SET Status = ? WHERE SlotID = ?";
@@ -170,6 +176,7 @@ public class SlotDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error in setSlotStatus: " + e.getMessage());
+        
         }
         return false;
     }

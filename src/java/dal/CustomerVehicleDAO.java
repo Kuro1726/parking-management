@@ -52,9 +52,38 @@ public class CustomerVehicleDAO extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return customerVehicleList;
+    }
+
+    public CustomerVehicle getVehicleByLicensePlate(String licensePlate) {
+        String strSQL = """
+                        select c.VehicleID, c.UserID, c.LicensePlate, c.TypeID, v.TypeName 
+                        from CustomerVehicles c, VehicleTypes v
+                        where c.TypeID = v.TypeID and c.LicensePlate = ?
+                        """;
+        try {
+            stm = connection.prepareStatement(strSQL);
+            stm.setString(1, licensePlate);
+            rs = stm.executeQuery();
+
+            if (rs.next()) {
+                int vehicleID = rs.getInt("VehicleID");
+                int userID = rs.getInt("UserID");
+                int typeID = rs.getInt("TypeID");
+                String typeName = rs.getString("TypeName");
+
+                VehicleType vehicleType = new VehicleType(typeID, typeName);
+                return new CustomerVehicle(vehicleID, userID, licensePlate, vehicleType);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        
+        }
+
+        return null;
     }
 
     public boolean addCustomerVehicle(CustomerVehicle customerVehicle) {
@@ -70,6 +99,7 @@ public class CustomerVehicleDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -86,6 +116,7 @@ public class CustomerVehicleDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
         return false;
     }
@@ -99,6 +130,7 @@ public class CustomerVehicleDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
         return false;
     }

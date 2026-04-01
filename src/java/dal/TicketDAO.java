@@ -62,6 +62,7 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in getActiveTicketsMap: " + e.getMessage());
+        
         }
         return map;
     }
@@ -114,12 +115,13 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in getActiveTicketsList: " + e.getMessage());
+        
         }
         return list;
     }
 
     /**
-     * Tìm vé đang ACTIVE theo biển số.
+     * Tim ve dang ACTIVE theo bien so.
      */
     public Ticket findActiveTicketByPlate(String licensePlate) {
         String sql = """
@@ -176,13 +178,14 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in findActiveTicketByPlate: " + e.getMessage());
+        
         }
         return null;
     }
 
     /**
-     * Tạo vé mới khi xe vào bãi.
-     * Lấy HourlyRate/DailyRate tại thời điểm tạo từ bảng Pricing.
+     * Tao ve moi khi xe vao bai.
+     * Lay HourlyRate/DailyRate tai th�?i diem tao tu bang Pricing.
      */
     public boolean createTicket(Ticket t) {
         String sql = """
@@ -215,12 +218,13 @@ public class TicketDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Error in createTicket: " + e.getMessage());
+        
         }
         return false;
     }
 
     /**
-     * Lấy chi tiết vé theo ID.
+     * Lay chi tiet ve theo ID.
      */
     public Ticket getTicketById(int ticketID) {
         String sql = """
@@ -264,12 +268,13 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in getTicketById: " + e.getMessage());
+        
         }
         return null;
     }
 
     /**
-     * Cập nhật trạng thái vé.
+     * Cap nhat trang thai ve.
      */
     public boolean updateTicketStatus(int ticketID, String status) {
         String sql = "UPDATE Tickets SET Status = ? WHERE TicketID = ?";
@@ -280,12 +285,13 @@ public class TicketDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("Error in updateTicketStatus: " + e.getMessage());
+        
         }
         return false;
     }
 
     /**
-     * Tạo TicketCode theo format: VEX-yyMMdd-0001 (tăng dần theo ngày).
+     * Tao TicketCode theo format: VEX-yyMMdd-0001 (tang dan theo ngay).
      */
     public String generateNextTicketCode() {
         String sql = """
@@ -305,22 +311,24 @@ public class TicketDAO extends DBContext {
                         nextSeq = Integer.parseInt(last4) + 1;
                     } catch (NumberFormatException ignored) {
                         nextSeq = 1;
-                    }
+                    
+        }
                 }
             }
             String datePart = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyMMdd"));
             return "VEX-" + datePart + "-" + String.format("%04d", nextSeq);
         } catch (Exception e) {
             System.out.println("Error in generateNextTicketCode: " + e.getMessage());
+        
         }
-        // Fallback nếu có lỗi DB
+        // Fallback neu co loi DB
         String datePart = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyMMdd"));
         return "VEX-" + datePart + "-" + String.format("%04d", (int) (System.currentTimeMillis() % 10000));
     }
 
     /**
-     * Lịch sử gộp check-in / check-out của một staff,
-     * có lọc theo mã vé hoặc biển số (tùy chọn).
+     * Lich su gop check-in / check-out cua mot staff,
+     * co l�?c theo ma ve hoac bien so (tuy ch�?n).
      */
     public List<StaffTicketHistory> getStaffHistory(int staffID, String searchKeyword) {
         List<StaffTicketHistory> list = new ArrayList<>();
@@ -407,6 +415,7 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in getStaffHistory: " + e.getMessage());
+        
         }
 
         return list;
@@ -469,6 +478,7 @@ public class TicketDAO extends DBContext {
             }
         } catch (Exception e) {
             System.out.println("Error in getTicketHistoryByCustomerID: " + e.getMessage());
+        
         }
         return list;
     }

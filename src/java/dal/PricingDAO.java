@@ -47,6 +47,7 @@ public class PricingDAO extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return pricingList;
@@ -64,6 +65,7 @@ public class PricingDAO extends DBContext {
 
         } catch (SQLException e) {
             System.out.println(e);
+        
         }
         return false;
     }
@@ -89,6 +91,7 @@ public class PricingDAO extends DBContext {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        
         }
 
         return pricing;
@@ -111,6 +114,7 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -129,6 +133,7 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -145,6 +150,7 @@ public class PricingDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
+        
         }
 
         return false;

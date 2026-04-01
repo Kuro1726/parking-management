@@ -50,7 +50,27 @@ public class VehicleInController extends HttpServlet {
             }
         }
 
-        // Lấy danh sách slot để staff chọn khi check-in
+        String action = request.getParameter("action");
+        if ("checkPlate".equals(action)) {
+            String licensePlate = request.getParameter("plate");
+            if (licensePlate == null) licensePlate = "";
+            licensePlate = licensePlate.trim();
+            
+            dal.CustomerVehicleDAO cvDAO = new dal.CustomerVehicleDAO();
+            models.CustomerVehicle cv = cvDAO.getVehicleByLicensePlate(licensePlate);
+            
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            
+            if (cv != null) {
+                response.getWriter().write("{\"found\":true, \"typeID\":" + cv.getTypeID() + "}");
+            } else {
+                response.getWriter().write("{\"found\":false}");
+            }
+            return;
+        }
+
+        // Lay danh sach slot de staff chon khi check-in
         SlotDAO slotDAO = new SlotDAO();
         List<Slot> slots = slotDAO.getAllSlots(null, null);
         request.setAttribute("slots", slots);
@@ -101,22 +121,31 @@ public class VehicleInController extends HttpServlet {
                     return;
                 }
 
+                dal.CustomerVehicleDAO cvDAO = new dal.CustomerVehicleDAO();
+                models.CustomerVehicle registeredVehicle = cvDAO.getVehicleByLicensePlate(licensePlate);
+
+                if (registeredVehicle != null && registeredVehicle.getTypeID() != typeID) {
+                    session.setAttribute("errorMsg", "License Plate " + licensePlate + " is registered as a " + registeredVehicle.getVehicleType().getTypeName() + ". Cannot check into a mismatched slot/type!");
+                    response.sendRedirect("VehicleIn");
+                    return;
+                }
+
                 Ticket ticket = new Ticket();
 
-                // Tạo mã vé theo format VEX-yyMMdd-0001
+                // Tao ma ve theo format VEX-yyMMdd-0001
                 ticket.setTicketCode(ticketDAO.generateNextTicketCode());
                 ticket.setLicensePlate(licensePlate);
                 ticket.setTypeID(typeID);
                 ticket.setSlotID(slotID);
-                ticket.setCustomerID(null); // khách vãng lai
+                ticket.setCustomerID(registeredVehicle != null ? registeredVehicle.getUserID() : null); // neu co dky thi map vao UserID, ko thi null
                 ticket.setCreatedBy(user.getUserID());
 
                 boolean created = ticketDAO.createTicket(ticket);
 
                 if (created) {
-                    // Đánh dấu slot đang được sử dụng
+                    // Danh dau slot dang duoc su dung
                     SlotDAO slotDAO = new SlotDAO();
-                    slotDAO.setSlotStatus(slotID, "OCCUPIED");
+                    slotDAO.setSlotStatus(slotID, "Occupied");
                     session.setAttribute("successMsg", "Check-in successful.");
                 } else {
                     session.setAttribute("errorMsg", "Check-in failed. Please try again.");

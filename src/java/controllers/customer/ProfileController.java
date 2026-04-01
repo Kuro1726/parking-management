@@ -99,6 +99,11 @@ public class ProfileController extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/Login");
+            return;
+        }
+
         String action = request.getParameter("action");
         UserDAO userDao = new UserDAO();
         VehicleTypeDAO vehicleTypeDao = new VehicleTypeDAO();

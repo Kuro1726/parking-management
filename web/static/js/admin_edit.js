@@ -46,7 +46,14 @@ function openEditModal(...args) {
         editModal.style.display = 'block';
 }
 
-function openDetailModal(btn, ...args) {
+function openDetailModal(...argsList) {
+    let btn = null;
+    let args = argsList;
+    if (argsList.length > 0 && typeof argsList[0] === 'object' && argsList[0] !== null && argsList[0].nodeType) {
+        btn = argsList[0];
+        args = argsList.slice(1);
+    }
+
     if (document.getElementById('detailSlotName')) {
         // Slot details
         const [name, zone, status, plate, owner, phone, time] = args;

@@ -30,6 +30,7 @@ public class UserDAO extends DBContext {
             String strSQL = """
                             SELECT U.*, R.RoleName
                             FROM Users U JOIN Roles R ON U.RoleID = R.RoleID
+                            WHERE U.Username != 'admin'
                             """;
 
             stm = connection.prepareCall(strSQL);
@@ -51,6 +52,7 @@ public class UserDAO extends DBContext {
             }
         } catch (Exception ex) {
             System.out.println("GetAccounts:" + ex.getMessage());
+        
         }
         return users;
     }
@@ -58,15 +60,15 @@ public class UserDAO extends DBContext {
     public List<User> getListUsersBySearch(String searchKeyword) {
         List<User> users = new ArrayList<>();
         try {
-            // Dùng LIKE để tìm kiếm chuỗi chứa từ khóa
+            // Dung LIKE de tim kiem chuoi chua tu khoa
             String strSQL = """
                             SELECT U.*, R.RoleName
                             FROM Users U JOIN Roles R ON U.RoleID = R.RoleID
-                            WHERE U.Username LIKE ?
+                            WHERE U.Username LIKE ? AND U.Username != 'admin'
                             """;
 
             stm = connection.prepareStatement(strSQL);
-            stm.setString(1, "%" + searchKeyword + "%"); // Truyền từ khóa vào
+            stm.setString(1, "%" + searchKeyword + "%"); // Truy�?n tu khoa vao
             rs = stm.executeQuery();
 
             while (rs.next()) {
@@ -89,6 +91,7 @@ public class UserDAO extends DBContext {
             }
         } catch (Exception ex) {
             System.out.println("getListUsersBySearch Error: " + ex.getMessage());
+        
         }
         return users;
     }
@@ -110,6 +113,7 @@ public class UserDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             System.out.println("updateUser Error: " + e.getMessage());
+        
         }
         return false;
     }
@@ -142,6 +146,7 @@ public class UserDAO extends DBContext {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return user;
@@ -157,12 +162,13 @@ public class UserDAO extends DBContext {
             stm.setString(2, user.getPassword());
             stm.setString(3, user.getFullName());
             stm.setString(4, user.getPhone());
-            stm.setInt(5, user.getRoleID()); // Lấy RoleID động
-            stm.setString(6, user.getStatus()); // Lấy Status động
+            stm.setInt(5, user.getRoleID()); // Lay RoleID dong
+            stm.setString(6, user.getStatus()); // Lay Status dong
             return stm.executeUpdate() > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -178,6 +184,7 @@ public class UserDAO extends DBContext {
             return stm.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
+        
         }
         return false;
     }
@@ -198,6 +205,7 @@ public class UserDAO extends DBContext {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -217,6 +225,7 @@ public class UserDAO extends DBContext {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;
@@ -234,6 +243,7 @@ public class UserDAO extends DBContext {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        
         }
 
         return false;

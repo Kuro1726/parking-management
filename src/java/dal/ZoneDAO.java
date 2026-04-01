@@ -38,6 +38,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getAllZones: " + e.getMessage());
+        
         }
         return zones;
     }
@@ -68,6 +69,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getZonesByName: " + e.getMessage());
+        
         }
         return zones;
     }
@@ -99,6 +101,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in getZonesByFilters: " + e.getMessage());
+        
         }
 
         // Filter by Vehicle Type in Java since it is a derived field
@@ -121,6 +124,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error loading zone capacity: " + e.getMessage());
+        
         }
     }
 
@@ -135,6 +139,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in checkZoneExist: " + e.getMessage());
+        
         }
         return false;
     }
@@ -151,6 +156,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in checkZoneExistForUpdate: " + e.getMessage());
+        
         }
         return false;
     }
@@ -172,6 +178,7 @@ public class ZoneDAO extends DBContext {
             }
         } catch (SQLException e) {
             System.out.println("Error in addZone: " + e.getMessage());
+        
         }
         return -1;
     }
@@ -189,6 +196,7 @@ public class ZoneDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error in editZone: " + e.getMessage());
             return false;
+        
         }
     }
 
@@ -229,6 +237,7 @@ public class ZoneDAO extends DBContext {
         } catch (SQLException e) {
             System.out.println("Error in deleteZone: " + e.getMessage());
             return "Internal error occurred during zone deletion.";
+        
         }
     }
 }
